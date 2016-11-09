@@ -1,2 +1,1 @@
-#web: gunicorn -b 0.0.0.0:$PORT app:app
-web: ./start.sh
+web: gunicorn -b 0.0.0.0:$PORT app:app

@@ -31,6 +31,11 @@ def index(code=None):
 
   result = {
     'price': price,
+    'per_5': summary['PER_5'][0],
+    'pbr_5': summary['PBR_5'][0],
+    'roe_5': summary['ROE_5'][0],
+    'bps_5_growth': summary['EPS_5_GROWTH'][0],
+    'bps_5_growth': summary['BPS_5_GROWTH'][0],
     'grade': grade.evaluate(raw),
     'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
   }
@@ -58,4 +63,5 @@ if __name__ == '__main__':
 
     if sys.argv[1] == 'test':
       index('005930')
+      # index('001520')
 

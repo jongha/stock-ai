@@ -4,7 +4,5 @@
 * Run `virtualenv venv`
 * VirtualEnv for Python3: `virtualenv -p python3 venv`
 * Run `source venv/bin/activate`
-* Run `pip install flask` (no sudo needed)
-* Run `pip install gunicorn`
 * Run `pip freeze > requirements.txt`
 * Run `heroku create --stack cedar`

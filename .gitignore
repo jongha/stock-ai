@@ -91,3 +91,6 @@ ENV/
 
 # Cloud9
 .c9
+
+# node.js modules
+node_mobules

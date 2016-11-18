@@ -1,0 +1,35 @@
+{
+  "name": "stock-ai",
+  "version": "1.0.0",
+  "description": "Stock AI",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "bower": "^1.8.0",
+    "css-loader": "^0.26.0",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --hot --host 0.0.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jongha/stock-ai.git"
+  },
+  "author": "Jong-Ha Ahn <jongha.ahn@mrlatte.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jongha/stock-ai/issues"
+  },
+  "homepage": "https://github.com/jongha/stock-ai#readme"
+}

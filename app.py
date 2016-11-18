@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 # from flask.ext.sqlalchemy import SQLAlchemy
 import lib.base as base
 import numpy as np
@@ -20,36 +20,42 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index(code=None):
-  import lib.loader as loader
+  data = None
+  return render_template('index.html', data = data)
 
-  code = code or request.args.get('code')
-  # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
 
-  (price, simple, summary, raw) = loader.load(code)
-  eps = simple['EPS'].mean()
-  eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
-
-  result = {
-    'price': price,
-    'per_5': summary['PER_5'][0],
-    'pbr_5': summary['PBR_5'][0],
-    'roe_5': summary['ROE_5'][0],
-    'bps_5_growth': summary['EPS_5_GROWTH'][0],
-    'bps_5_growth': summary['BPS_5_GROWTH'][0],
-    'grade': grade.evaluate(raw),
-    'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
-  }
-
-  print(result)
-
-  # return render_template('index.html', data = { 'grade': table['grade'] })
-  return result
-
+@app.route('/analytics.json', methods=['GET'])
+def analytics(code=None):
   # if request.method == 'POST':
   #   u = User(request.form['name'], request.form['email'])
   #   db.session.add(u)
   #   db.session.commit()
   # return redirect(url_for('index'))
+
+  code = request.args.get('code')
+  data = None
+
+  if code:
+    import lib.loader as loader
+
+    code = code or request.args.get('code')
+    # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
+    (price, simple, summary, raw) = loader.load(code)
+    eps = simple['EPS'].mean()
+    eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
+
+    data = {
+      'price': price,
+      'per_5': summary['PER_5'][0],
+      'pbr_5': summary['PBR_5'][0],
+      'roe_5': summary['ROE_5'][0],
+      'eps_5_growth': summary['EPS_5_GROWTH'][0],
+      'bps_5_growth': summary['BPS_5_GROWTH'][0],
+      'grade': grade.evaluate(raw),
+      'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
+    }
+
+  return jsonify(data)
 
 if __name__ == '__main__':
   import sys

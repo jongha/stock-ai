@@ -1,0 +1,13 @@
+{
+  "name": "stock-ai",
+  "homepage": "https://github.com/jongha/stock-ai",
+  "authors": [
+    "Jong-Ha Ahn <jongha.ahn@mrlatte.net>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+  }
+}

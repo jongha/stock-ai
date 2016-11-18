@@ -1,9 +1,9 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 # from flask.ext.sqlalchemy import SQLAlchemy
-import lib.base as base
+import modules.base as base
 import numpy as np
-from lib.algorithm import grade, johntempleton
+from modules.algorithm import grade, johntempleton
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////tmp/flask_app.db')
@@ -36,7 +36,7 @@ def analytics(code=None):
   data = None
 
   if code:
-    import lib.loader as loader
+    import modules.loader as loader
 
     code = code or request.args.get('code')
     # data = base.download(code, 2016, 1, 1, 2016, 11, 1)

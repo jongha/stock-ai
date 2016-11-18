@@ -14,7 +14,8 @@ BASE_URL = 'http://search.itooza.com/index.htm?seName=%s'
 def load(code):
   url = BASE_URL % code
   html = urlopen(Request(url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
-  soup = BeautifulSoup(html, 'html.parser')
+  soup = BeautifulSoup(html, 'lxml', from_encoding='utf-8') # the content is utf-8
+
 
   price_contents = soup.find('div', class_='item-detail').find('span').contents
   price = ''.join(re.findall('\d+', price_contents[0])) if len(price_contents) > 0 else 0

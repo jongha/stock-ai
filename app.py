@@ -32,7 +32,7 @@ def analytics(code=None):
   #   db.session.commit()
   # return redirect(url_for('index'))
 
-  code = request.args.get('code')
+  code = code or request.args.get('code')
   data = None
 
   if code:
@@ -41,6 +41,8 @@ def analytics(code=None):
     code = code or request.args.get('code')
     # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
     (price, simple, summary, raw) = loader.load(code)
+
+    print(raw)
     eps = simple['EPS'].mean()
     eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
 
@@ -68,6 +70,6 @@ if __name__ == '__main__':
     print('Argument List:', str(sys.argv))
 
     if sys.argv[1] == 'test':
-      index('005930')
-      # index('001520')
+      analytics('005930')
+      # analytics('001520')
 

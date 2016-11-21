@@ -1,11 +1,11 @@
-var PROD = JSON.parse(process.env.PROD_ENV || '0');
+var PRODUCTION = JSON.parse(process.env.PRODUCTION || '0');
 
 var webpack = require('webpack');
 var LessPluginCleanCSS = require('less-plugin-clean-css');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var plugins = [new ExtractTextPlugin('styles.css')];
-if (PROD) {
+if (PRODUCTION) {
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         compress: {
             warnings: false,
@@ -23,7 +23,7 @@ module.exports = {
 
     output: {
         path: __dirname + '/static/',
-        filename: PROD ? 'bundle.min.js' : 'bundle.js'
+        filename: PRODUCTION ? 'bundle.min.js' : 'bundle.js'
     },
 
     devServer: {
@@ -35,9 +35,20 @@ module.exports = {
     plugins: plugins,
 
     module: {
+        lessLoader: {
+            lessPlugins: [
+                new LessPluginCleanCSS({
+                    advanced: true
+                })
+            ]
+        },
         loaders: [{
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract(
+                'css-loader?sourceMap!'
+            )
+        }, {
             test: /\.less$/,
-            // loader: "style-loader!css-loader!less-loader"
             loader: ExtractTextPlugin.extract(
                 'css-loader?sourceMap!' +
                 'less-loader?sourceMap'

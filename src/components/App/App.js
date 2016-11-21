@@ -3,7 +3,7 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import {Header, Footer} from '../index';
 
-var style = require("!css-loader!less-loader!./App.less");
+var style = require('./App.less');
 var FontAwesome = require('react-fontawesome');
 
 class App extends React.Component {
@@ -20,15 +20,17 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.input.value = "I used ref to do this";
+        // this.input.value = 'I used ref to do this';
     }
 
     componentDidUpdate() {}
 
     render() {
-        let text = "Container"
+        console.log(style);
+
+        let text = 'Container'
         return (
-            <div className={style.testtext} onClick={this.onClick}>
+            <div className={ style.testtext } onClick={ this.onClick }>
                 <Header title={ this.props.headerTitle } />
                 {text}
                 <div ref={ ref => { this.element = ref } }>

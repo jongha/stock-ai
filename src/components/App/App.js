@@ -1,52 +1,64 @@
 import React from 'react';
 import axios from 'axios';
-import {connect} from 'react-redux';
-import {Header, Footer} from '../index';
+import ReactDOM from 'react-dom';
+import {
+    connect
+}
+from 'react-redux';
+import {
+    SearchBox,
+    AnalyticsBox,
+    Header,
+    Footer
+}
+from '../index';
 
-var style = require('./App.less');
-var FontAwesome = require('react-fontawesome');
+let style = require('./App.less');
+let FontAwesome = require('react-fontawesome');
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
+
+        this.onSearchBox = this.onSearchBox.bind(this);
+        this.onChangeSearchBox = this.onChangeSearchBox.bind(this);
+        this.state = {
+            analytics: {},
+        };
     }
 
-    onClick() {
+    onSearchBox(e) {
+        console.log(e);
         axios.get('/analytics.json?code=005930').then(response => {
             console.log(response);
-            // this.props.onReceive(response.data.number);
+            this.setState({
+                analytics: response.data
+            });
+        });
+    }
+
+    onChangeSearchBox(e) {
+        this.setState({
+            search: e.target.value
         });
     }
 
     componentDidMount() {
-        // this.input.value = 'I used ref to do this';
+        console.log('componentDidMount');
     }
 
-    componentDidUpdate() {}
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
 
     render() {
-        console.log(style);
-
-        let text = 'Container'
         return (
-            <div className={ style.testtext } onClick={ this.onClick }>
-                <Header title={ this.props.headerTitle } />
-                {text}
-                <div ref={ ref => { this.element = ref } }>
-                    {this.props.value}
-                </div>
-
-                <Footer />
+            <div className='row'>
+                <SearchBox value={ this.state.search } onClick={ this.onSearchBox } onChange={ this.onChangeSearchBox } />
+                <AnalyticsBox value={ this.state.analytics } />
             </div>
         );
     }
 }
-
-App.defaultProps = {
-    headerTitle: 'Default header',
-    contentTitle: 'Default contentTitle',
-    contentBody: 'Default contentBody'
-};
 
 export default App;

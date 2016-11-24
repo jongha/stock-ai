@@ -1,11 +1,13 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-# from flask.ext.sqlalchemy import SQLAlchemy
 import modules.base as base
 import numpy as np
 from modules.algorithm import grade, johntempleton
+from modules.decorators.minified_response import minified_response
 
 app = Flask(__name__)
+
+# from flask.ext.sqlalchemy import SQLAlchemy
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////tmp/flask_app.db')
 # db = SQLAlchemy(app)
 
@@ -19,6 +21,7 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET'])
+@minified_response
 def index(code=None):
   data = None
   return render_template('index.html', data = data)
@@ -41,8 +44,6 @@ def analytics(code=None):
     code = code or request.args.get('code')
     # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
     (price, simple, summary, raw) = loader.load(code)
-
-    print(raw)
     eps = simple['EPS'].mean()
     eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
 

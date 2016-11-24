@@ -4,7 +4,15 @@ var webpack = require('webpack');
 var LessPluginCleanCSS = require('less-plugin-clean-css');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var plugins = [new ExtractTextPlugin('styles.css')];
+var plugins = [new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'process.env': {
+            NODE_ENV: JSON.stringify('production')
+        }
+    }),
+    new ExtractTextPlugin('styles.css')
+];
+
 if (PRODUCTION) {
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -55,11 +63,11 @@ module.exports = {
             )
         }, {
             test: /\.js$/,
-            loader: 'babel',
+            loader: "babel-loader",
             exclude: /node_modules/,
             query: {
-                cacheDirectory: true,
-                presets: ['es2015', 'react']
+                cacheDirectory: PRODUCTION,
+                presets: ['latest', 'react']
             }
         }]
     }

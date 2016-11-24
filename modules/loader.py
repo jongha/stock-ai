@@ -8,39 +8,46 @@ import config
 import pandas
 import re
 import math
+import modules.base as base
 
 BASE_URL = 'http://search.itooza.com/index.htm?seName=%s'
 
 def load(code):
-  url = BASE_URL % code
-  html = urlopen(Request(url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
-  soup = BeautifulSoup(html, 'lxml', from_encoding='utf-8') # the content is utf-8
+  df = base.load(code)
+  if df is None:
+    url = BASE_URL % code
+    html = urlopen(Request(url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
+    soup = BeautifulSoup(html, 'lxml', from_encoding='utf-8') # the content is utf-8
 
+    price_contents = soup.find('div', class_='item-detail').find('span').contents
+    price = ''.join(re.findall('\d+', price_contents[0])) if len(price_contents) > 0 else 0
 
-  price_contents = soup.find('div', class_='item-detail').find('span').contents
-  price = ''.join(re.findall('\d+', price_contents[0])) if len(price_contents) > 0 else 0
+    tables = soup.find_all('table', limit=4)
 
-  tables = soup.find_all('table', limit=4)
+    simple = get_data_simple(code, tables)
+    summary = get_data_summary(code, tables)
+    raw = get_data_raw(code, tables)
 
-  simple = get_data_simple(tables)
-  summary = get_data_summary(tables)
-  raw = get_data_raw(tables)
+    base.dump(code, (price, simple, summary, raw))
+
+  else:
+    (price, simple, summary, raw) = df
 
   return (price, simple, summary, raw)
 
 
-def get_data_simple(tables):
+def get_data_simple(code, tables):
   df = pd.read_html(str(tables[0]), header=0)[0]
   return df
 
 
-def get_data_summary(tables):
+def get_data_summary(code, tables):
   df = pd.read_html(str(tables[1]), header=0)[0]
   df.columns = ['PER_5', 'PBR_5', 'ROE_5', 'EPS_5_GROWTH', 'BPS_5_GROWTH']
   return df
 
 
-def get_data_raw(tables):
+def get_data_raw(code, tables):
   if len(tables) >= 4:
     df = pd.read_html(str(tables[3]), header=0)[0]
     columns = []

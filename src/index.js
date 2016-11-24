@@ -6,6 +6,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import counterReducer from './reducers';
 
-const rootElement = document.getElementById('root');
-ReactDOM.render(<App
-    headerTitle = "Welcome!" />, rootElement);
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);

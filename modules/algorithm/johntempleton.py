@@ -12,10 +12,14 @@ import math
 # 과거 EPS성장률로 향후 5년의 EPS 추정하여 그 합의 1배~2배를 적용 (중간값 1.5배를 적용함)
 # http://www.itooza.com/common/iview.php?no=2009020617100668054
 def evaluate(eps, eps_ifrs):
+  if not eps_ifrs.keys()[0].endswith('-12'):
+    eps_ifrs = eps_ifrs.drop(eps_ifrs.index[[0]])
+
+  eps_ifrs = eps_ifrs.dropna()[:5]
   df = pandas.DataFrame(columns=['EPS'])
   eps_count = len(eps_ifrs)
 
-  percent_ifrs = eps_ifrs[0] / eps_ifrs[eps_count - 1]
+  percent_ifrs = eps_ifrs[0] / eps_ifrs[-1]
   direction = 1 if percent_ifrs >= 0 else -1
   eps_growth = math.pow(abs(percent_ifrs), 1 / (eps_count - 1)) * direction
 

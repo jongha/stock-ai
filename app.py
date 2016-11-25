@@ -1,9 +1,10 @@
+#-*- coding: utf-8 -*-
 import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import modules.base as base
 import numpy as np
-from modules.algorithm import grade, johntempleton
 from modules.decorators.minified_response import minified_response
+import config
 
 app = Flask(__name__)
 
@@ -39,26 +40,18 @@ def analytics(code=None):
   data = None
 
   if code:
-    import modules.loader as loader
-
     code = code or request.args.get('code')
     # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
-    (price, simple, summary, raw) = loader.load(code)
-    eps = simple['EPS'].mean()
-    eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
+    data = base.load(code)
 
-    data = {
-        'price': price,
-        'per_5': summary['PER_5'][0],
-        'pbr_5': summary['PBR_5'][0],
-        'roe_5': summary['ROE_5'][0],
-        'eps_5_growth': summary['EPS_5_GROWTH'][0],
-        'bps_5_growth': summary['BPS_5_GROWTH'][0],
-        'grade': grade.evaluate(raw),
-        'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
-    }
+    if not config.PRODUCTION or data is None:
+      import modules.loader as loader
+      data = loader.load(code)
+      base.dump(code, data)
 
-  return jsonify(data)
+      return jsonify(data['json'])
+
+  return jsonify(data['json'])
 
 
 if __name__ == '__main__':

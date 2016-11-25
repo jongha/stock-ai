@@ -9,95 +9,50 @@ import pandas
 import re
 import math
 import modules.base as base
+from modules.venders import itooza, fnguide
+from modules.algorithm import grade, johntempleton
 
-BASE_URL = 'http://search.itooza.com/index.htm?seName=%s'
+ITOOZA_URL = 'http://search.itooza.com/index.htm?seName=%s'
+FNGUIDE_URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_Main.asp?pGB=1&gicode=a%s'
+
+
+def load_url(url, code):
+  html = urlopen(
+      Request(
+          url % code, headers={'User-Agent': config.REQUEST_USER_AGENT}))
+
+  soup = BeautifulSoup(
+      html, 'lxml', from_encoding='utf-8')  # the content is utf-8
+
+  return {'html': html, 'soup': soup}
 
 
 def load(code):
-  df = base.load(code)
-  if df is None:
-    url = BASE_URL % code
-    html = urlopen(
-        Request(
-            url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
-    soup = BeautifulSoup(
-        html, 'lxml', from_encoding='utf-8')  # the content is utf-8
+  itooza_data = load_url(ITOOZA_URL, code)
+  fnguide_data = load_url(FNGUIDE_URL, code)
 
-    price_contents = soup.find(
-        'div', class_='item-detail').find('span').contents
-    price = ''.join(re.findall('\d+', price_contents[0])) if len(
-        price_contents) > 0 else 0
+  itooza_result = itooza.load(itooza_data['html'], itooza_data['soup'])
+  fnguide_result = fnguide.load(fnguide_data['html'], fnguide_data['soup'])
 
-    tables = soup.find_all('table', limit=4)
-
-    simple = get_data_simple(code, tables)
-    summary = get_data_summary(code, tables)
-    raw = get_data_raw(code, tables)
-
-    base.dump(code, (price, simple, summary, raw))
-
-  else:
-    (price, simple, summary, raw, soup) = df
-
-  return (price, simple, summary, raw)
-
-
-def get_data_simple(code, tables):
-  df = pd.read_html(str(tables[0]), header=0)[0]
-  return df
-
-
-def get_data_summary(code, tables):
-  df = pd.read_html(str(tables[1]), header=0)[0]
-  df.columns = ['PER_5', 'PBR_5', 'ROE_5', 'EPS_5_GROWTH', 'BPS_5_GROWTH']
-  return df
-
-
-def get_data_raw(code, tables):
-  if len(tables) >= 4:
-    df = pd.read_html(str(tables[3]), header=0)[0]
-    columns = []
-    for index in range(len(df.columns)):
-      columns.append(date_column(df.columns[index]))
-
-    df.columns = columns
-    if len(df['MONTH'].dropna()) > 0:
-      for index in range(len(df['MONTH'])):
-        df.loc[index, ('MONTH')] = column_name(df['MONTH'][index])
-
-      df = df.transpose()
-      df.columns = df.iloc[0]
-      df = df.reindex(df.index.drop('MONTH'))
-      return df
-
-  return None
-
-
-def date_column(data):
-  data = data.replace('월', '').replace('.', '-')
-  if bool(re.match('\d{2}-\d{2}', data)):
-    data = '20' + data
-  else:
-    data = 'MONTH'
-
-  return data
-
-
-def column_name(data):
-  name = {
-      '주당순이익(EPS,연결지배)': 'EPS_IFRS',
-      '주당순이익(EPS,개별)': 'EPS',
-      'PER (배)': 'PER',
-      '주당순자산(지분법)': 'BPS',
-      'PBR (배)': 'PBR',
-      '주당 배당금': 'DIVIDEND_PRICE',
-      '시가 배당률 (%)': 'DIVIDEND_RATE',
-      'ROE (%)': 'ROE',
-      '순이익률 (%)': 'ROS',
-      '영업이익률 (%)': 'OPM',
+  data = {
+      'json': {
+          'code': code,
+          'title': itooza_result['title'],
+          'price': itooza_result['price'],
+          'summary': fnguide_result['summary'],
+          'eps': itooza_result['eps'],
+          'per_5': itooza_result['per_5'],
+          'pbr_5': itooza_result['pbr_5'],
+          'roe_5': itooza_result['roe_5'],
+          'eps_5_growth': itooza_result['eps_5_growth'],
+          'bps_5_growth': itooza_result['eps_5_growth'],
+          'grade': grade.evaluate(itooza_result['roe_5_mean'],
+                                  itooza_result['ros_5_mean']),
+          'johntempleton': johntempleton.evaluate(itooza_result['eps'],
+                                                  itooza_result['raw']['EPS_IFRS']),
+      },
+      'itooza': itooza_result,
+      'fnguide': fnguide_result,
   }
-
-  if data and data in name:
-    return name[data]
 
   return data

@@ -33,7 +33,7 @@ def load(code):
   return None
 
 def save(code, df):
-  df.to_pickle(code)
+  df.to_pickle(get_file_path(code))
 
 def dump(code, df):
   with open(get_file_path(code), 'wb') as handle:

@@ -6,6 +6,7 @@ import pandas
 import re
 import math
 
+
 # 존 템플턴
 # 주가수익배수(PER) 평가법
 # 과거 EPS성장률로 향후 5년의 EPS 추정하여 그 합의 1배~2배를 적용 (중간값 1.5배를 적용함)

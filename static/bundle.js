@@ -60,7 +60,7 @@
 	
 	var _reactRedux = __webpack_require__(210);
 	
-	var _reducers = __webpack_require__(260);
+	var _reducers = __webpack_require__(261);
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
@@ -21706,11 +21706,11 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _SearchBox = __webpack_require__(256);
+	var _SearchBox = __webpack_require__(257);
 	
 	var _SearchBox2 = _interopRequireDefault(_SearchBox);
 	
-	var _AnalyticsBox = __webpack_require__(258);
+	var _AnalyticsBox = __webpack_require__(259);
 	
 	var _AnalyticsBox2 = _interopRequireDefault(_AnalyticsBox);
 	
@@ -25606,7 +25606,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var style = __webpack_require__(262);
+	var style = __webpack_require__(256);
 	var FontAwesome = __webpack_require__(252);
 	
 	var App = function (_React$Component) {
@@ -25674,6 +25674,12 @@
 
 /***/ },
 /* 256 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25702,7 +25708,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var style = __webpack_require__(257);
+	var style = __webpack_require__(258);
 	var FontAwesome = __webpack_require__(252);
 	
 	var SearchBox = function (_React$Component) {
@@ -25775,13 +25781,13 @@
 	exports.default = SearchBox;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25810,7 +25816,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var style = __webpack_require__(259);
+	var style = __webpack_require__(260);
 	
 	var AnalyticsBox = function (_React$Component) {
 	    _inherits(AnalyticsBox, _React$Component);
@@ -25844,13 +25850,13 @@
 	exports.default = AnalyticsBox;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25859,7 +25865,7 @@
 	    value: true
 	});
 	
-	var _actions = __webpack_require__(261);
+	var _actions = __webpack_require__(262);
 	
 	var initialState = {
 	    value: -1
@@ -25882,7 +25888,7 @@
 	exports.default = counterReducer;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25899,12 +25905,6 @@
 	        value: value
 	    };
 	};
-
-/***/ },
-/* 262 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

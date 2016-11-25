@@ -12,15 +12,21 @@ import modules.base as base
 
 BASE_URL = 'http://search.itooza.com/index.htm?seName=%s'
 
+
 def load(code):
   df = base.load(code)
   if df is None:
     url = BASE_URL % code
-    html = urlopen(Request(url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
-    soup = BeautifulSoup(html, 'lxml', from_encoding='utf-8') # the content is utf-8
+    html = urlopen(
+        Request(
+            url, headers={'User-Agent': config.REQUEST_USER_AGENT}))
+    soup = BeautifulSoup(
+        html, 'lxml', from_encoding='utf-8')  # the content is utf-8
 
-    price_contents = soup.find('div', class_='item-detail').find('span').contents
-    price = ''.join(re.findall('\d+', price_contents[0])) if len(price_contents) > 0 else 0
+    price_contents = soup.find(
+        'div', class_='item-detail').find('span').contents
+    price = ''.join(re.findall('\d+', price_contents[0])) if len(
+        price_contents) > 0 else 0
 
     tables = soup.find_all('table', limit=4)
 
@@ -31,7 +37,7 @@ def load(code):
     base.dump(code, (price, simple, summary, raw))
 
   else:
-    (price, simple, summary, raw) = df
+    (price, simple, summary, raw, soup) = df
 
   return (price, simple, summary, raw)
 
@@ -57,7 +63,7 @@ def get_data_raw(code, tables):
     df.columns = columns
     if len(df['MONTH'].dropna()) > 0:
       for index in range(len(df['MONTH'])):
-        df.loc[index,('MONTH')] = column_name(df['MONTH'][index])
+        df.loc[index, ('MONTH')] = column_name(df['MONTH'][index])
 
       df = df.transpose()
       df.columns = df.iloc[0]
@@ -65,6 +71,7 @@ def get_data_raw(code, tables):
       return df
 
   return None
+
 
 def date_column(data):
   data = data.replace('월', '').replace('.', '-')
@@ -78,16 +85,16 @@ def date_column(data):
 
 def column_name(data):
   name = {
-    '주당순이익(EPS,연결지배)': 'EPS_IFRS',
-    '주당순이익(EPS,개별)': 'EPS',
-    'PER (배)': 'PER',
-    '주당순자산(지분법)': 'BPS',
-    'PBR (배)': 'PBR',
-    '주당 배당금': 'DIVIDEND_PRICE',
-    '시가 배당률 (%)': 'DIVIDEND_RATE',
-    'ROE (%)': 'ROE',
-    '순이익률 (%)': 'ROS',
-    '영업이익률 (%)': 'OPM',
+      '주당순이익(EPS,연결지배)': 'EPS_IFRS',
+      '주당순이익(EPS,개별)': 'EPS',
+      'PER (배)': 'PER',
+      '주당순자산(지분법)': 'BPS',
+      'PBR (배)': 'PBR',
+      '주당 배당금': 'DIVIDEND_PRICE',
+      '시가 배당률 (%)': 'DIVIDEND_RATE',
+      'ROE (%)': 'ROE',
+      '순이익률 (%)': 'ROS',
+      '영업이익률 (%)': 'OPM',
   }
 
   if data and data in name:

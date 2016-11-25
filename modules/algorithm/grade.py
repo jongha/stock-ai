@@ -6,6 +6,7 @@ import pandas
 import re
 import math
 
+
 # A등급 5년 순이익률 15% 이상, ROE 15% 이상 이상
 # B등급 5년 순이익률 10% 이상, ROE 10% 이상 이상
 # C등급 5년 ROE 10% 이상

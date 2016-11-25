@@ -7,8 +7,16 @@ import os
 import re
 import pickle
 
+
 def get_file_path(code):
+  if not os.path.exists(config.DATA_PATH):
+    try:
+      os.makedirs(config.DATA_PATH)
+    except:
+      pass
+
   return os.path.join(config.DATA_PATH, code + '.pkl')
+
 
 def download(code, year1, month1, day1, year2, month2, day2):
   start = datetime.datetime(year1, month1, day1)
@@ -18,6 +26,7 @@ def download(code, year1, month1, day1, year2, month2, day2):
 
   return df
 
+
 def load(code):
   try:
     return pd.read_pickle(code)
@@ -26,9 +35,11 @@ def load(code):
 
   return None
 
+
 def save(code, df):
   df.to_pickle(get_file_path(code))
 
-def dump(code, df):
+
+def data_dump(code, df):
   with open(get_file_path(code), 'wb') as handle:
     pickle.dump(df, handle)

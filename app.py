@@ -24,7 +24,7 @@ app = Flask(__name__)
 @minified_response
 def index(code=None):
   data = None
-  return render_template('index.html', data = data)
+  return render_template('index.html', data=data)
 
 
 @app.route('/analytics.json', methods=['GET'])
@@ -48,17 +48,18 @@ def analytics(code=None):
     eps_ifrs = raw['EPS_IFRS'].dropna()[:5]
 
     data = {
-      'price': price,
-      'per_5': summary['PER_5'][0],
-      'pbr_5': summary['PBR_5'][0],
-      'roe_5': summary['ROE_5'][0],
-      'eps_5_growth': summary['EPS_5_GROWTH'][0],
-      'bps_5_growth': summary['BPS_5_GROWTH'][0],
-      'grade': grade.evaluate(raw),
-      'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
+        'price': price,
+        'per_5': summary['PER_5'][0],
+        'pbr_5': summary['PBR_5'][0],
+        'roe_5': summary['ROE_5'][0],
+        'eps_5_growth': summary['EPS_5_GROWTH'][0],
+        'bps_5_growth': summary['BPS_5_GROWTH'][0],
+        'grade': grade.evaluate(raw),
+        'johntempleton': johntempleton.evaluate(eps, eps_ifrs),
     }
 
   return jsonify(data)
+
 
 if __name__ == '__main__':
   import sys
@@ -73,4 +74,3 @@ if __name__ == '__main__':
     if sys.argv[1] == 'test':
       analytics('005930')
       # analytics('001520')
-

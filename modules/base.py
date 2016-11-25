@@ -8,13 +8,7 @@ import re
 import pickle
 
 def get_file_path(code):
-  if not os.path.exists(config.DATA_PATH):
-    try:
-      os.makedirs(config.DATA_PATH)
-    except:
-      pass
-
-  return os.path.join(config.DATA_PATH, 'data', code + '.pkl')
+  return os.path.join(config.DATA_PATH, code + '.pkl')
 
 def download(code, year1, month1, day1, year2, month2, day2):
   start = datetime.datetime(year1, month1, day1)

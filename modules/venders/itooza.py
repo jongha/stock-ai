@@ -15,12 +15,19 @@ def load(html, soup):
 
   simple = get_data_simple(tables)
   summary = get_data_summary(tables)
+
   raw = get_data_raw(tables)
+  raw = get_dividend_payout_ratio(raw)
+  raw = get_bps_multiple(raw, 0.5)
+  raw = get_bps_multiple(raw, 2)
+  raw = get_bps_multiple(raw, 3)
+  raw = get_price(raw)
 
   return {
       'price': price,
       'title': title,
       'eps': simple['EPS'].mean(),
+      'bps': simple['BPS'].mean(),
       'per_5': summary['PER_5'][0],
       'pbr_5': summary['PBR_5'][0],
       'roe_5': summary['ROE_5'][0],
@@ -33,6 +40,38 @@ def load(html, soup):
       'raw': raw,
       'html': html,
   }
+
+
+# 주가
+def get_price(raw):
+  column_name = 'Price'
+  df = pd.DataFrame(columns=[column_name], index=raw.index.values)
+  for month in raw.index.values:
+    value = raw['BPS'][month] * raw['PBR'][month]
+    df[column_name][month] = int(value if not pd.isnull(value) else 0)
+  raw = pd.concat([raw, df], axis=1, join_axes=[raw.index])
+  return raw
+
+
+def get_bps_multiple(raw, multiple):
+  column_name = 'BPS*' + str(multiple)
+  df = pd.DataFrame(columns=[column_name], index=raw.index.values)
+  for month in raw.index.values:
+    value = raw['BPS'][month] * multiple
+    df[column_name][month] = int(value if not pd.isnull(value) else 0)
+  raw = pd.concat([raw, df], axis=1, join_axes=[raw.index])
+  return raw
+
+
+# 배당성향(연결)
+def get_dividend_payout_ratio(raw):
+  column_name = 'Dividend Payout Ratio'
+  df = pd.DataFrame(columns=[column_name], index=raw.index.values)
+  for month in raw.index.values:
+    value = raw['DIVIDEND_PRICE'][month] / raw['EPS_IFRS'][month] * 100
+    df[column_name][month] = int(value if not pd.isnull(value) else 0)
+  raw = pd.concat([raw, df], axis=1, join_axes=[raw.index])
+  return raw
 
 
 def get_data_simple(tables):
@@ -69,7 +108,7 @@ def get_data_raw(tables):
 def date_column(data):
   data = data.replace('월', '').replace('.', '-')
   if bool(re.match('\d{2}-\d{2}', data)):
-    data = '20' + data
+    data = '20' + data[0:2]
   else:
     data = 'MONTH'
 

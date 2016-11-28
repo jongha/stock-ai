@@ -36,22 +36,25 @@ def analytics(code=None):
   #   db.session.commit()
   # return redirect(url_for('index'))
 
-  code = code or request.args.get('code')
-  data = None
+  if code is None:
+    code = request.args.get('code')
+    if code is not None:
+      data = analytics(code)
+      return jsonify(data)
+    else:
+      return None
 
-  if code:
-    code = code or request.args.get('code')
-    # data = base.download(code, 2016, 1, 1, 2016, 11, 1)
-    data = base.load(code)
+  else:
+    data = None
+    if code:
+      data = base.load(code)
+      if not config.PRODUCTION or data is None:
+        import modules.loader as loader
+        data = loader.load(code)
+        base.dump(code, data)
+        return data
 
-    if not config.PRODUCTION or data is None:
-      import modules.loader as loader
-      data = loader.load(code)
-      base.dump(code, data)
-
-      return jsonify(data['json'])
-
-  return jsonify(data['json'])
+    return data
 
 
 if __name__ == '__main__':
@@ -64,6 +67,5 @@ if __name__ == '__main__':
   else:
     print('Argument List:', str(sys.argv))
 
-    if sys.argv[1] == 'test':
-      analytics('005930')
-      # analytics('001520')
+    if sys.argv[1] == 'analytics':
+      print(analytics('005930'))

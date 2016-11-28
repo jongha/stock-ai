@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from modules.venders.vender import Vender
 
 
-class FnguideInvest(Vender):
-  URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_invest.asp?pGB=1&gicode=a%s'
+class FnguideRatio(Vender):
+  URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_FinanceRatio.asp?pGB=1&gicode=a%s'
 
   def __init__(self, code, vender=None):
     Vender.__init__(self, self.URL, vender)
@@ -16,12 +16,13 @@ class FnguideInvest(Vender):
     html, soup = response['html'], response['soup']
 
     tables = soup.find_all('div', class_='um_table')
-    df = self.get_data_from_table(tables[1])
+    df = self.get_data_from_table(tables[0])
 
-    self.concat(df, 'FCFF')
-    self.concat(df, 'STOCK_COUNT')
-    self.concat(df, 'EV/EBITDA')
-    self.concat(df, 'EV1')
+    self.concat(df, 'EPS_RATE_OF_INCREASE')
+    self.concat(df, 'ROA')
+    self.concat(df, 'ROIC')
+    self.concat(df, 'CURRENT_RATIO')
+    self.concat(df, 'INTEREST_REWARD_POWER')
 
   def concat(self, df, column):
     data = self.get_data()
@@ -76,8 +77,10 @@ class FnguideInvest(Vender):
 
   def column_name(self, name):
     names = {
-        'IFRS 연결': 'MONTH',
-        '수정평균주식수': 'STOCK_COUNT',
+        'IFRS(연결)': 'MONTH',
+        'EPS증가율': 'EPS_RATE_OF_INCREASE',
+        '유동비율': 'CURRENT_RATIO',
+        '이자보상배율(배)': 'INTEREST_REWARD_POWER',
     }
 
     if name and name in names:

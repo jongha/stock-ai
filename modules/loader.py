@@ -12,12 +12,12 @@ import modules.base as base
 
 from modules.venders.itooza import Itooza
 from modules.venders.fnguide_invest import FnguideInvest
+from modules.venders.fnguide_ratio import FnguideRatio
+from modules.venders.sejong import Sejong
+from modules.venders.post_cleaning import PostCleaning
 
 from modules.venders import itooza, fnguide_invest
 from modules.algorithm import grade, johntempleton
-
-FNGUIDE_MAIN_URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_Main.asp?pGB=1&gicode=a%s'
-FNGUIDE_INVEST_URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_invest.asp?pGB=1&gicode=a%s'
 
 
 def load(code):
@@ -26,38 +26,40 @@ def load(code):
 
   vender = Itooza(code)
   vender = FnguideInvest(code, vender)
+  vender = FnguideRatio(code, vender)
+  vender = Sejong(code, vender)
+  vender = PostCleaning(code, vender)
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가
-  # 매출액 (억)
-  # 영업이익 (억)
+  # SALES: 매출액 (억)
+  # BUSINESS_PROFITS: 영업이익 (억)
   # EPS_IFRS: EPS (연결)
   # EPS: EPS
-  # EPS증가율
+  # EPS_RATE_OF_INCREASE: EPS증가율
   # ROE: ROE
-  # ROA
-  # ROS: 순이익률
-  # OPM: 영업이익률
-  # ROIC
+  # ROA: ROA
+  # ROIC: ROIC
   # PER: PER
   # BPS: BPS
   # PBR: PBR
   # DIVIDEND_PRICE: 배당금
   # DIVIDEND_RATE: 시가배당률
-  # 순이익률
-  # 영업이익률
+  # ROS: 순이익률
+  # OPM: 영업이익률
   # FCFF: FCFF (억)
   # DIVIDEND_PAYOUT_RATIO: 배당성향(연결)
-  # 순이익률(매출/이익)
-  # 매출액/현금흐름
-  # 현금투자수익률
-  # 부채비율
-  # 유동비율
-  # 이자보상배율
+  # NET_INCOME_RATIO: 순이익률(매출/이익)
+  # SALES_FCFF: 매출액/현금흐름
+  # EV_FCFF: 현금투자수익률
+  # DEBT_RATIO: 부채비율
+  # CURRENT_RATIO: 유동비율
+  # INTEREST_REWARD_POWER: 이자보상배율
   # EV/EBITDA
   # BPS_TIMES_0.5: PBR  0.5
   # BPS_TIMES_2: PBR  2
   # BPS_TIMES_3: PBR 3
+  # EV1: EV시가총액(비지배주주지분포함) + 순차입부채
 
   return vender.get_data()
 
@@ -96,4 +98,4 @@ def load(code):
   #     },
   # }
 
-  return data
+  # return data

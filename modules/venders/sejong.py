@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from modules.venders.vender import Vender
 
 
-class FnguideInvest(Vender):
-  URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_invest.asp?pGB=1&gicode=a%s'
+class Sejong(Vender):
+  URL = 'http://www.sejongdata.com/business_include_fr/table_main0_bus_01.html?&no=%s'
 
   def __init__(self, code, vender=None):
     Vender.__init__(self, self.URL, vender)
@@ -15,13 +15,14 @@ class FnguideInvest(Vender):
     response = self.load_url(code)
     html, soup = response['html'], response['soup']
 
-    tables = soup.find_all('div', class_='um_table')
+    tables = soup.find_all('table')
     df = self.get_data_from_table(tables[1])
 
-    self.concat(df, 'FCFF')
-    self.concat(df, 'STOCK_COUNT')
-    self.concat(df, 'EV/EBITDA')
-    self.concat(df, 'EV1')
+    self.concat(df, 'SALES')
+    self.concat(df, 'BUSINESS_PROFITS')
+    self.concat(df, 'CAPITAL_TOTAL')
+    self.concat(df, 'DEBT_TOTAL')
+    self.set_debt_ratio()
 
   def concat(self, df, column):
     data = self.get_data()
@@ -35,6 +36,7 @@ class FnguideInvest(Vender):
         item.extract()
 
     df = pd.read_html(str(soup), header=0)[0]
+
     columns = []
     for index in range(len(df.columns)):
       columns.append(self.date_column(df.columns[index]))
@@ -66,8 +68,21 @@ class FnguideInvest(Vender):
 
     return df
 
+  # 부채비율
+  def set_debt_ratio(self):
+    column_name = 'DEBT_RATIO'
+    df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
+    data = self.get_data()
+
+    for month in data.index.values:
+      value = data['DEBT_TOTAL'][month] / self.data['CAPITAL_TOTAL'][
+          month] * 100
+      df[column_name][month] = int(value if not pd.isnull(value) else 0)
+
+    self.concat_data(df)
+
   def date_column(self, data):
-    if bool(re.match('\d{4}/\d{2}', data)):
+    if bool(re.match('\d{4}\.\d{2}', data)):
       data = data[0:4]
     else:
       data = self.column_name(data)
@@ -76,8 +91,11 @@ class FnguideInvest(Vender):
 
   def column_name(self, name):
     names = {
-        'IFRS 연결': 'MONTH',
-        '수정평균주식수': 'STOCK_COUNT',
+        'Unnamed: 0': 'MONTH',
+        '매출액': 'SALES',
+        '영업이익': 'BUSINESS_PROFITS',
+        '자본총계': 'CAPITAL_TOTAL',
+        '부채총계': 'DEBT_TOTAL',
     }
 
     if name and name in names:

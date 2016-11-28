@@ -27,11 +27,6 @@ class Itooza(Vender):
     summary = self.get_data_summary(tables)
 
     self.set_tables(tables)
-    self.set_dividend_payout_ratio()
-    self.set_bps_multiple(0.5)
-    self.set_bps_multiple(2)
-    self.set_bps_multiple(3)
-    self.set_get_price()
 
     # return {
     #     'price': price,
@@ -50,43 +45,6 @@ class Itooza(Vender):
     #     'data': data,
     #     'html': html,
     # }
-
-  # 주가
-
-  def set_get_price(self):
-    column_name = 'PRICE'
-    df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
-    data = self.get_data()
-
-    for month in data.index.values:
-      value = data['BPS'][month] * self.data['PBR'][month]
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
-
-    self.concat_data(df)
-
-  def set_bps_multiple(self, multiple):
-    column_name = 'BPS_TIMES_' + str(multiple)
-    df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
-    data = self.get_data()
-
-    for month in data.index.values:
-      value = data['BPS'][month] * multiple
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
-
-    self.concat_data(df)
-
-  # 배당성향(연결)
-  def set_dividend_payout_ratio(self):
-    column_name = 'DIVIDEND_PAYOUT_RATIO'
-    df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
-    data = self.get_data()
-
-    for month in data.index.values:
-      value = data['DIVIDEND_PRICE'][month] / self.data['EPS_IFRS'][
-          month] * 100
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
-
-    self.concat_data(df)
 
   def get_data_simple(self, tables):
     df = pd.read_html(str(tables[0]), header=0)[0]

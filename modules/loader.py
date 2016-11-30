@@ -17,7 +17,9 @@ from modules.venders.sejong import Sejong
 from modules.venders.post_cleaning import PostCleaning
 
 from modules.venders import itooza, fnguide_invest
-from modules.algorithm import grade, johntempleton
+from modules.evaluations.evaluation import Evaluation
+from modules.evaluations.grade import Grade
+from modules.evaluations.johntempleton import JohnTempleton
 
 
 def load(code):
@@ -29,6 +31,13 @@ def load(code):
   vender = FnguideRatio(code, vender)
   vender = Sejong(code, vender)
   vender = PostCleaning(code, vender)
+
+  data = vender.get_data()
+  evaluation = Evaluation(data)
+  evaluation = Grade(evaluation)
+  evaluation = JohnTempleton(evaluation)
+
+  print(evaluation.get_data())
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가
@@ -61,7 +70,7 @@ def load(code):
   # BPS_TIMES_3: PBR 3
   # EV1: EV시가총액(비지배주주지분포함) + 순차입부채
 
-  return vender.get_data()
+  return data
 
   # fnguide_main_result = fnguide_main.load(fnguide_main_data['html'],
   #                                         fnguide_main_data['soup'])

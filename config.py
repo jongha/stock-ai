@@ -3,7 +3,7 @@ import os
 import tempfile
 
 APP_NAME = 'stock-ai'
-PRODUCTION = False
+PRODUCTION = True  #False
 
 REQUEST_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'
 

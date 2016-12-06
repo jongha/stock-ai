@@ -28,6 +28,20 @@ class Itooza(Vender):
 
     self.set_tables(tables)
 
+    self.concat('EPS_SIMPLE', simple['EPS'][0])
+    self.concat('PER_5', summary['PER_5'][0])
+    self.concat('PBR_5', summary['PBR_5'][0])
+    self.concat('ROE_5', summary['ROE_5'][0])
+    self.concat('EPS_5_GROWTH', summary['EPS_5_GROWTH'][0])
+    self.concat('BPS_5_GROWTH', summary['BPS_5_GROWTH'][0])
+
+  def concat(self, column_name, value):
+    if value:
+      df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
+      df[column_name][self.data.index[0]] = value
+      self.data = pd.concat(
+          [self.data, df], axis=1, join_axes=[self.data.index])
+
     # return {
     #     'price': price,
     #     'title': title,

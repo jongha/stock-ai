@@ -16,7 +16,7 @@ class Grade(Evaluation):
   def __init__(self, evaluation):
     data = evaluation.get_data()
     Evaluation.__init__(self, data)
-    self.concat('GRADE', self.evaluate())
+    self.concat('EVALUATION_GRADE', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()

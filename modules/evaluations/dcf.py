@@ -19,7 +19,7 @@ class DCF(Evaluation):
   def __init__(self, evaluation):
     data = evaluation.get_data()
     Evaluation.__init__(self, data)
-    self.concat('DCF', self.evaluate())
+    self.concat('EVALUATION_DCF', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()

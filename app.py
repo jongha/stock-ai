@@ -52,7 +52,6 @@ def analytics(code=None):
         import modules.loader as loader
         data = loader.load(code)
         base.dump(code, data)
-        return data
 
     return data
 

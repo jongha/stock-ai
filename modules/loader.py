@@ -20,6 +20,7 @@ from modules.venders import itooza, fnguide_invest
 from modules.evaluations.evaluation import Evaluation
 from modules.evaluations.grade import Grade
 from modules.evaluations.johntempleton import JohnTempleton
+from modules.evaluations.dcf import DCF
 
 
 def load(code):
@@ -36,8 +37,7 @@ def load(code):
   evaluation = Evaluation(data)
   evaluation = Grade(evaluation)
   evaluation = JohnTempleton(evaluation)
-
-  print(evaluation.get_data())
+  evaluation = DCF(evaluation)
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가
@@ -69,6 +69,10 @@ def load(code):
   # BPS_TIMES_2: PBR  2
   # BPS_TIMES_3: PBR 3
   # EV1: EV시가총액(비지배주주지분포함) + 순차입부채
+
+  # GRADE: 등급
+  # JOHN_TEMPLETON: 존 템플턴 가치
+  # DCF: 현금 흐름법 가치
 
   return data
 

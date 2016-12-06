@@ -9,6 +9,7 @@ REQUEST_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.3
 
 # os.path.dirname(os.path.abspath(__file__))
 DATA_DISCOUNT_RATE = 0.1  # percent
+DATA_CFN = 0.03 # 영구가치증가율
 DATA_BASE_PATH = tempfile.gettempdir()
 DATA_PATH = os.path.join(DATA_BASE_PATH, APP_NAME)
 DATA_EXTENSION = '.pkl'

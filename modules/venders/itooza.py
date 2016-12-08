@@ -28,12 +28,18 @@ class Itooza(Vender):
 
     self.set_tables(tables)
 
-    self.concat('EPS_SIMPLE', simple['EPS'][0])
-    self.concat('PER_5', summary['PER_5'][0])
-    self.concat('PBR_5', summary['PBR_5'][0])
-    self.concat('ROE_5', summary['ROE_5'][0])
-    self.concat('EPS_5_GROWTH', summary['EPS_5_GROWTH'][0])
-    self.concat('BPS_5_GROWTH', summary['BPS_5_GROWTH'][0])
+    self.set_json('PER', simple['PER'][0])
+    self.set_json('PBR', simple['PBR'][0])
+    self.set_json('ROE', simple['ROE = ROS * S/A * A/E'][0])
+    self.set_json('EPS', simple['EPS'][0])
+    self.set_json('BPS', simple['BPS'][0])
+    self.set_json('DPS', simple['DPS'][0])
+
+    self.set_json('PER_5', summary['PER_5'][0])
+    self.set_json('PBR_5', summary['PBR_5'][0])
+    self.set_json('ROE_5', summary['ROE_5'][0])
+    self.set_json('EPS_5_GROWTH', summary['EPS_5_GROWTH'][0])
+    self.set_json('BPS_5_GROWTH', summary['BPS_5_GROWTH'][0])
 
   def concat(self, column_name, value):
     if value:

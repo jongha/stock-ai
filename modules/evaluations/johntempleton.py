@@ -15,8 +15,10 @@ from modules.evaluations.evaluation import Evaluation
 class JohnTempleton(Evaluation):
   def __init__(self, evaluation):
     data = evaluation.get_data()
-    Evaluation.__init__(self, data)
-    self.concat('EVALUATION_JOHN_TEMPLETON', self.evaluate())
+    json = evaluation.get_json()
+
+    Evaluation.__init__(self, data, json)
+    self.set_json('JOHN_TEMPLETON', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()

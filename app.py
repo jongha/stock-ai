@@ -67,4 +67,4 @@ if __name__ == '__main__':
     print('Argument List:', str(sys.argv))
 
     if sys.argv[1] == 'analytics':
-      analytics('005930')
+      analytics(sys.argv[2])

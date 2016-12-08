@@ -36,15 +36,16 @@ def load(code):
   vender = PostCleaning(code, vender)
 
   data = vender.get_data()
-  evaluation = Evaluation(data)
+  json = vender.get_json()
+
+  evaluation = Evaluation(data, json)
   evaluation = Grade(evaluation)
   evaluation = JohnTempleton(evaluation)
   evaluation = DCF(evaluation)
   evaluation = BPS(evaluation)
   evaluation = PER(evaluation)
 
-  data = evaluation.get_data()
-  # print(data)
+  print(evaluation.get_json())
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가

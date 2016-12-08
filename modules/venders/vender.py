@@ -10,14 +10,21 @@ import pandas as pd
 
 class Vender:
   data = None
+  json = {}
   url = ''
 
-  def __init__(self, url, vender):
+  def __init__(self, url, vender, json={}):
     if url is not None:
       self.set_url(url)
 
     if vender is not None:
       self.set_vender(vender)
+
+  def set_json(self, key, value):
+    self.json[key] = value
+
+  def get_json(self):
+    return self.json
 
   def get_url(self):
     return self.url

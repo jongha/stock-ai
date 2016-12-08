@@ -12,9 +12,11 @@ from modules.evaluations.evaluation import Evaluation
 class PER(Evaluation):
   def __init__(self, evaluation):
     data = evaluation.get_data()
-    Evaluation.__init__(self, data)
-    self.concat('EVALUATION_PER', self.evaluate())
+    json = evaluation.get_json()
+
+    Evaluation.__init__(self, data, json)
+    self.set_json('PER', self.evaluate())
 
   def evaluate(self):
-    data = self.get_data()
-    return int(data['EPS_SIMPLE'][0] * data['PER_5'][0])
+    json = self.get_json()
+    return int(json['EPS'] * json['PER_5'])

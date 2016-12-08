@@ -9,16 +9,23 @@ import math
 
 class Evaluation:
   data = None
+  json = {}
 
-  def __init__(self, data):
+  def __init__(self, data, json={}):
     self.data = data
-    pass
+    self.json = json
 
   def set_data(self, data):
     self.data = data
 
   def get_data(self):
     return self.data
+
+  def set_json(self, key, value):
+    self.json[key] = value
+
+  def get_json(self):
+    return self.json
 
   def evaluate(self):
     pass

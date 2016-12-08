@@ -21,7 +21,7 @@ class DCF(Evaluation):
     json = evaluation.get_json()
 
     Evaluation.__init__(self, data, json)
-    self.set_json('DCF', self.evaluate())
+    self.set_json('EVALUATION_DCF', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()
@@ -35,12 +35,13 @@ class DCF(Evaluation):
       index = 0
 
       sum_of_product = 0
-      for index in range(5): # 0: latest ~
+      for index in range(5):  # 0: latest ~
         sum_of_product += fcff[index] * [0.3, 0.3, 0.3, 0.1, 0.1][index]
 
       percent_fcff = fcff[0] / fcff[-1]
       direction = 1 if percent_fcff >= 0 else -1
-      fcff_growth = math.pow(abs(percent_fcff), 1 / (fcff_count - 1)) * direction
+      fcff_growth = math.pow(abs(percent_fcff),
+                             1 / (fcff_count - 1)) * direction
 
       # 1단계: 차후 10년간 FCF(잉여현금흐름) 예측
       fcff_year = [sum_of_product]
@@ -51,20 +52,23 @@ class DCF(Evaluation):
       fcff_year_discount = []
       fcff_year_discount_sum = 0
       for index in range(10):
-        value = fcff_year[index] / math.pow(1 + config.DATA_DISCOUNT_RATE, index + 1)
+        value = fcff_year[index] / math.pow(1 + config.DATA_DISCOUNT_RATE,
+                                            index + 1)
         fcff_year_discount.append(value)
         fcff_year_discount_sum += value
 
       # 3단계: 영구가치계산및 현재가치로 할인 [영구가치=10년뒤 FCF x (1+g)/(R-g)] : g=영구가치증가율
       fcff_10_year = fcff_year[len(fcff_year) - 1] * fcff_growth
-      value_growth = (1 + config.DATA_CFN) / (config.DATA_DISCOUNT_RATE - config.DATA_CFN)
-      value_growth_fixed = fcff_10_year * value_growth # 영구가치
-      fcff_discount_rate = value_growth_fixed / math.pow(1 + config.DATA_DISCOUNT_RATE, 10)
+      value_growth = (1 + config.DATA_CFN) / (
+          config.DATA_DISCOUNT_RATE - config.DATA_CFN)
+      value_growth_fixed = fcff_10_year * value_growth  # 영구가치
+      fcff_discount_rate = value_growth_fixed / math.pow(
+          1 + config.DATA_DISCOUNT_RATE, 10)
 
       # 4단계: 총 주식가치 계산 (할인된 영구가치+ 10년동안 할인된 현금흐름의합)
-      total_stock_price = fcff_year_discount_sum + fcff_discount_rate # 총주식가치
+      total_stock_price = fcff_year_discount_sum + fcff_discount_rate  # 총주식가치
 
       # 5단계: 1주당 주식가치 계산 (총주식가치/주식수)
-      dcf = (total_stock_price* 100000000) / (data['STOCK_COUNT'][0] * 1000)
+      dcf = (total_stock_price * 100000000) / (data['STOCK_COUNT'][0] * 1000)
 
     return int(dcf)

@@ -23,6 +23,7 @@ from modules.evaluations.johntempleton import JohnTempleton
 from modules.evaluations.dcf import DCF
 from modules.evaluations.bps import BPS
 from modules.evaluations.per import PER
+from modules.evaluations.eps_bps import EPS_BPS
 
 
 def load(code):
@@ -44,6 +45,7 @@ def load(code):
   evaluation = DCF(evaluation)
   evaluation = BPS(evaluation)
   evaluation = PER(evaluation)
+  evaluation = EPS_BPS(evaluation)
 
   print(evaluation.get_json())
 
@@ -90,6 +92,7 @@ def load(code):
   # EVALUATION_DCF: 현금 흐름법 가치
   # EVALUATION_BPS:
   # EVALUATION_PER:
+  # EVALUATION_5_EPS_BPS: 5 EPS/BPS
 
   return data
 

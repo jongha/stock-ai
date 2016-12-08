@@ -17,7 +17,7 @@ class EPS_BPS(Evaluation):
     json = evaluation.get_json()
 
     Evaluation.__init__(self, data, json)
-    self.set_json('EVALUATION_5_EPS_BPS', self.evaluate())
+    self.set_json('5_EPS_BPS', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()
@@ -61,4 +61,4 @@ class EPS_BPS(Evaluation):
     value = (bps_for_future * config.DATA_VALUE_OF_BPS) + (
         value_of_future * config.DATA_VALUE_OF_EPS)
 
-    return value
+    return int(value)

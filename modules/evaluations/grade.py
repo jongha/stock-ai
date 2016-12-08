@@ -18,7 +18,7 @@ class Grade(Evaluation):
     json = evaluation.get_json()
 
     Evaluation.__init__(self, data, json)
-    self.set_json('EVALUATION_GRADE', self.evaluate())
+    self.set_json('GRADE', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()

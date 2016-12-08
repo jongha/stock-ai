@@ -21,7 +21,7 @@ class DCF(Evaluation):
     json = evaluation.get_json()
 
     Evaluation.__init__(self, data, json)
-    self.set_json('EVALUATION_DCF', self.evaluate())
+    self.set_json('DCF', self.evaluate())
 
   def evaluate(self):
     data = self.get_data()

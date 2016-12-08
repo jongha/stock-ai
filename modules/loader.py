@@ -24,6 +24,7 @@ from modules.evaluations.dcf import DCF
 from modules.evaluations.bps import BPS
 from modules.evaluations.per import PER
 from modules.evaluations.eps_bps import EPS_BPS
+from modules.evaluations.rim import RIM
 
 
 def load(code):
@@ -46,6 +47,7 @@ def load(code):
   evaluation = BPS(evaluation)
   evaluation = PER(evaluation)
   evaluation = EPS_BPS(evaluation)
+  evaluation = RIM(evaluation)
 
   print(evaluation.get_json())
 
@@ -93,6 +95,7 @@ def load(code):
   # EVALUATION_BPS:
   # EVALUATION_PER:
   # EVALUATION_5_EPS_BPS: 5 EPS/BPS
+  # EVALUATION_RIM: 올슨 초과이익모형
 
   return data
 

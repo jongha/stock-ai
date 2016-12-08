@@ -22,7 +22,7 @@ class Evaluation:
     return self.data
 
   def set_json(self, key, value):
-    self.json[key] = value
+    self.json['EVALUATION_' + key] = value
 
   def get_json(self):
     return self.json

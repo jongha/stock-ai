@@ -15,7 +15,7 @@ class BPS(Evaluation):
     json = evaluation.get_json()
 
     Evaluation.__init__(self, data, json)
-    self.set_json('EVALUATION_BPS', self.evaluate())
+    self.set_json('BPS', self.evaluate())
 
   def evaluate(self):
     json = self.get_json()

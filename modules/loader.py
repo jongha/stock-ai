@@ -17,14 +17,16 @@ from modules.venders.sejong import Sejong
 from modules.venders.post_cleaning import PostCleaning
 
 from modules.venders import itooza, fnguide_invest
-from modules.evaluations.evaluation import Evaluation
-from modules.evaluations.grade import Grade
-from modules.evaluations.johntempleton import JohnTempleton
-from modules.evaluations.dcf import DCF
-from modules.evaluations.bps import BPS
-from modules.evaluations.per import PER
-from modules.evaluations.eps_bps import EPS_BPS
-from modules.evaluations.rim import RIM
+from modules.valuations.valuation import Valuation
+from modules.valuations.grade import Grade
+from modules.valuations.john_templeton import JohnTempleton
+from modules.valuations.dcf import DCF
+from modules.valuations.bps import BPS
+from modules.valuations.per import PER
+from modules.valuations.eps_bps import EPS_BPS
+from modules.valuations.rim import RIM
+from modules.valuations.yamaguchi_yohei import YamaguchiYohei
+from modules.valuations.cantabile import Cantabile
 
 
 def load(code):
@@ -40,16 +42,18 @@ def load(code):
   data = vender.get_data()
   json = vender.get_json()
 
-  evaluation = Evaluation(data, json)
-  evaluation = Grade(evaluation)
-  evaluation = JohnTempleton(evaluation)
-  evaluation = DCF(evaluation)
-  evaluation = BPS(evaluation)
-  evaluation = PER(evaluation)
-  evaluation = EPS_BPS(evaluation)
-  evaluation = RIM(evaluation)
+  valuation = Valuation(data, json)
+  valuation = Grade(valuation)
+  valuation = JohnTempleton(valuation)
+  valuation = DCF(valuation)
+  valuation = BPS(valuation)
+  valuation = PER(valuation)
+  valuation = EPS_BPS(valuation)
+  valuation = RIM(valuation)
+  valuation = YamaguchiYohei(valuation)
+  valuation = Cantabile(valuation)
 
-  print(evaluation.get_json())
+  print(valuation.get_json())
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가
@@ -89,13 +93,14 @@ def load(code):
   # EPS_5_GROWTH:
   # BPS_5_GROWTH:
 
-  # EVALUATION_GRADE: 등급
-  # EVALUATION_JOHN_TEMPLETON: 존 템플턴 가치
-  # EVALUATION_DCF: 현금 흐름법 가치
-  # EVALUATION_BPS:
-  # EVALUATION_PER:
-  # EVALUATION_5_EPS_BPS: 5 EPS/BPS
-  # EVALUATION_RIM: 올슨 초과이익모형
+  # Valuations
+  # VALUATION_GRADE: 등급
+  # VALUATION_JOHN_TEMPLETON: 존 템플턴 가치
+  # VALUATION_DCF: 현금 흐름법 가치
+  # VALUATION_BPS:
+  # VALUATION_PER:
+  # VALUATION_5_EPS_BPS: 5 EPS/BPS
+  # VALUATION_RIM: 올슨 초과이익모형
 
   return data
 
@@ -115,15 +120,15 @@ def load(code):
   #         'roe_5': itooza_result['roe_5'],
   #         'eps_5_growth': itooza_result['eps_5_growth'],
   #         'bps_5_growth': itooza_result['eps_5_growth'],
-  #         'grade': grade.evaluate(itooza_result['roe_5_mean'],
+  #         'grade': grade.valuate(itooza_result['roe_5_mean'],
   #                                 itooza_result['ros_5_mean']),
-  #         'evaluate': {
+  #         'valuate': {
   #             # 현 EPS 과거 5년 PER 평균을 곱한 값
   #             'per_5': itooza_result['eps'] * itooza_result['per_5'],
   #             # 현 BPS 과거 5년 PBR 평균값을 곱한 값
   #             'pbr_5': itooza_result['bps'] * itooza_result['pbr_5'],
   #             # 주가수익배수(PER) 평가법, 과거 EPS성장률로 향후 5년의 EPS 추정하여 그 합의 1배~2배를 적용 (중간값 1.5배를 적용함)
-  #             'johntempleton': johntempleton.evaluate(
+  #             'johntempleton': johntempleton.valuate(
   #                 itooza_result['eps'], itooza_result['raw']['EPS_IFRS']),
   #         }
   #     },

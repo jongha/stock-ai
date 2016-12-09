@@ -5,7 +5,7 @@ import config
 import pandas
 import re
 import math
-from modules.evaluations.evaluation import Evaluation
+from modules.valuations.valuation import Valuation
 
 
 # 현금흐름할인법
@@ -15,15 +15,15 @@ from modules.evaluations.evaluation import Evaluation
 # -안전마진 -   모닝스타: Min20 Max60 (일반적 30~40%), 안정적인 사업모델 20, 사업리스크가 큰 순환기업 60
 # -할인율 : Min 7% Max 13% 모닝스타의 평균 복합성할인률 10.5%
 #                 할인율을 결정하는 요소 (기업규모, 재무레버리지, 경기순환성, 경영 기업지배구조, 경제적해자)
-class DCF(Evaluation):
-  def __init__(self, evaluation):
-    data = evaluation.get_data()
-    json = evaluation.get_json()
+class DCF(Valuation):
+  def __init__(self, valuation):
+    data = valuation.get_data()
+    json = valuation.get_json()
 
-    Evaluation.__init__(self, data, json)
-    self.set_json('DCF', self.evaluate())
+    Valuation.__init__(self, data, json)
+    self.set_json('DCF', self.valuate())
 
-  def evaluate(self):
+  def valuate(self):
     data = self.get_data()
 
     # print(data['FCFF'].dropna()[:5].multiply({1,1,1,1,1}))

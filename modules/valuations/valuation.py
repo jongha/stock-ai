@@ -7,7 +7,7 @@ import re
 import math
 
 
-class Evaluation:
+class Valuation:
   data = None
   json = {}
 
@@ -22,12 +22,12 @@ class Evaluation:
     return self.data
 
   def set_json(self, key, value):
-    self.json['EVALUATION_' + key] = value
+    self.json['VALUATION_' + key] = value
 
   def get_json(self):
     return self.json
 
-  def evaluate(self):
+  def valuate(self):
     pass
 
   def concat(self, column_name, value):

@@ -5,27 +5,27 @@ import config
 import pandas
 import re
 import math
-from modules.evaluations.evaluation import Evaluation
+from modules.valuations.valuation import Valuation
 
 
 # 5년후 BPS *BPS성장률 기업가치 할인
 # 5년 EPS * EPS 성장률 년도별 할인된 흐름
 # BPS(0.4)+EPS(0.6) = 기업가치
-class EPS_BPS(Evaluation):
-  def __init__(self, evaluation):
-    data = evaluation.get_data()
-    json = evaluation.get_json()
+class EPS_BPS(Valuation):
+  def __init__(self, valuation):
+    data = valuation.get_data()
+    json = valuation.get_json()
 
-    Evaluation.__init__(self, data, json)
-    self.set_json('5_EPS_BPS', self.evaluate())
+    Valuation.__init__(self, data, json)
+    self.set_json('5_EPS_BPS', self.valuate())
 
-  def evaluate(self):
+  def valuate(self):
     data = self.get_data()
     json = self.get_json()
 
     bps = json['BPS']
-    bps_5_growth = float(json['BPS_5_GROWTH'].replace('%', '')) / 100
-    eps_5_growth = float(json['EPS_5_GROWTH'].replace('%', '')) / 100
+    bps_5_growth = json['BPS_5_GROWTH']
+    eps_5_growth = json['EPS_5_GROWTH']
 
     # BPS 미래 기업가치의 할인법
     bps_for_future = (bps * math.pow(1 + bps_5_growth, 5)) * math.pow(

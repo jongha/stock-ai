@@ -5,22 +5,22 @@ import config
 import pandas
 import re
 import math
-from modules.evaluations.evaluation import Evaluation
+from modules.valuations.valuation import Valuation
 
 
 # A등급 5년 순이익률 15% 이상, ROE 15% 이상 이상
 # B등급 5년 순이익률 10% 이상, ROE 10% 이상 이상
 # C등급 5년 ROE 10% 이상
 # D등급 그외
-class Grade(Evaluation):
-  def __init__(self, evaluation):
-    data = evaluation.get_data()
-    json = evaluation.get_json()
+class Grade(Valuation):
+  def __init__(self, valuation):
+    data = valuation.get_data()
+    json = valuation.get_json()
 
-    Evaluation.__init__(self, data, json)
-    self.set_json('GRADE', self.evaluate())
+    Valuation.__init__(self, data, json)
+    self.set_json('GRADE', self.valuate())
 
-  def evaluate(self):
+  def valuate(self):
     data = self.get_data()
     roe_5_mean = data['ROE'].dropna()[:5].mean()
     ros_5_mean = data['ROS'].dropna()[:5].mean()

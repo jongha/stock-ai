@@ -5,22 +5,22 @@ import config
 import pandas
 import re
 import math
-from modules.evaluations.evaluation import Evaluation
+from modules.valuations.valuation import Valuation
 
 
 # 존 템플턴
 # 주가수익배수(PER) 평가법
 # 과거 EPS성장률로 향후 5년의 EPS 추정하여 그 합의 1배~2배를 적용 (중간값 1.5배를 적용함)
 # http://www.itooza.com/common/iview.php?no=2009020617100668054
-class JohnTempleton(Evaluation):
-  def __init__(self, evaluation):
-    data = evaluation.get_data()
-    json = evaluation.get_json()
+class JohnTempleton(Valuation):
+  def __init__(self, valuation):
+    data = valuation.get_data()
+    json = valuation.get_json()
 
-    Evaluation.__init__(self, data, json)
-    self.set_json('JOHN_TEMPLETON', self.evaluate())
+    Valuation.__init__(self, data, json)
+    self.set_json('JOHN_TEMPLETON', self.valuate())
 
-  def evaluate(self):
+  def valuate(self):
     data = self.get_data()
     eps = data['EPS'].dropna()[:1].mean()
     eps_ifrs = data['EPS_IFRS'].dropna()[:5]

@@ -28,6 +28,10 @@ from modules.valuations.eps_bps import EPS_BPS
 from modules.valuations.rim import RIM
 from modules.valuations.yamaguchi_yohei import YamaguchiYohei
 from modules.valuations.cantabile import Cantabile
+from modules.valuations.peg import PEG
+from modules.valuations.psr import PSR
+from modules.valuations.graham import Graham
+from modules.valuations.john_neff import JohnNeff
 
 
 def load(code):
@@ -55,6 +59,10 @@ def load(code):
   valuation = RIM(valuation)
   valuation = YamaguchiYohei(valuation)
   valuation = Cantabile(valuation)
+  valuation = PEG(valuation)
+  valuation = PSR(valuation)
+  valuation = Graham(valuation)
+  valuation = JohnNeff(valuation)
 
   print(valuation.get_json())
 
@@ -72,7 +80,7 @@ def load(code):
   # BPS: BPS
   # PBR: PBR
   # DIVIDEND_PRICE: 배당금
-  # DIVIDEND_RATE: 시가배당률
+  # DIVIDEND_RATE: 시가배당률 (%)
   # ROS: 순이익률
   # OPM: 영업이익률
   # FCFF: FCFF (억)

@@ -90,7 +90,6 @@ class YamaguchiYohei(Valuation):
     # 주당 기업가치
     company_value_per = company_value / (data['STOCK_COUNT'].dropna()[:1][0] *
                                          1000)
-
     # 안전마진 가치
     value = company_value_per * (1 - config.DATA_DISCOUNT_RATE)
 

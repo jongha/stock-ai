@@ -14,8 +14,11 @@ DATA_FIXED_RATE = (1 + DATA_CFN) / (
     DATA_DISCOUNT_RATE - DATA_CFN)  # 가치증가율, percent
 DATA_VALUE_OF_BPS = 0.4  # BPS 기업가치, percent
 DATA_VALUE_OF_EPS = 0.6  # EPS 기업가치, percent
-DATA_EXPECT_GROWTH_RATE = 1 # 기대성장률 조정비율
-DATA_CAPITAL_RATIO_RATE = 0.3 # 자본조정비율
+DATA_EXPECT_GROWTH_RATE = 1  # 기대성장률 조정비율
+DATA_CAPITAL_RATIO_RATE = 0.3  # 자본조정비율
+DATA_CORPORATE_TAX = 0.22  # 법인세
+DATA_BUSINESSRATE_OF_INTEREST = 0.0461  # 기업대출금리		4.61
+DATA_SOTCK_YEARLY_MEAN = 0.0907  # 종합주가 연평균수익			9.07
 
 DATA_BASE_PATH = tempfile.gettempdir()
 DATA_PATH = os.path.join(DATA_BASE_PATH, APP_NAME)

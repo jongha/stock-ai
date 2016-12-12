@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen, Request
 import config
 import pandas as pd
+import random
+import string
 
 
 class Vender:
@@ -59,3 +61,9 @@ class Vender:
           [self.data, df], axis=1, join_axes=[self.data.index])
     else:
       self.data = df
+
+  def isNaN(self, num):
+    return num != num
+
+  def id_generator(self, size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))

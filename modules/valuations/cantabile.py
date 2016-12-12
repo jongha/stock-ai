@@ -57,8 +57,8 @@ class Cantabile(Valuation):
     for index in reversed(range(3)):  # 0: latest ~
       profit_values.append(eps_ifrs[index])
 
-    eps1 = json['EPS']*(1+json['ROE_5'])
-    eps2 = eps1*(1+json['ROE_5'])
+    eps1 = json['EPS'] * (1 + json['ROE_5'])
+    eps2 = eps1 * (1 + json['ROE_5'])
 
     profit_values.append(eps1)
     profit_values.append(eps2)
@@ -74,8 +74,7 @@ class Cantabile(Valuation):
     # 기대성장률 = ROE * 성장률조정비율
     expect_growth_rate = roe * config.DATA_EXPECT_GROWTH_RATE
 
-    full_value = (
-        profit_value + asset_value + (dividend * 5)) * (
-            1 + (expect_growth_rate * 3)) * (1 - config.DATA_DISCOUNT_RATE)
+    full_value = (profit_value + asset_value + (dividend * 5)) * (
+        1 + (expect_growth_rate * 3)) * (1 - config.DATA_DISCOUNT_RATE)
 
     return full_value

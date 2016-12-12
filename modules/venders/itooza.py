@@ -30,16 +30,21 @@ class Itooza(Vender):
 
     self.set_json('PER', simple['PER'][0])
     self.set_json('PBR', simple['PBR'][0])
-    self.set_json('ROE', self.str_to_percent(simple['ROE = ROS * S/A * A/E'][0].split('%')[0]))
+    self.set_json(
+        'ROE',
+        self.str_to_percent(simple['ROE = ROS * S/A * A/E'][0].split('%')[0]))
     self.set_json('EPS', simple['EPS'][0])
     self.set_json('BPS', simple['BPS'][0])
     self.set_json('DPS', simple['DPS'][0])
 
     self.set_json('PER_5', summary['PER_5'][0])
     self.set_json('PBR_5', summary['PBR_5'][0])
-    self.set_json('ROE_5', self.str_to_percent(summary['ROE_5'][0].split('%')[0]))
-    self.set_json('EPS_5_GROWTH', self.str_to_percent(summary['EPS_5_GROWTH'][0]))
-    self.set_json('BPS_5_GROWTH', self.str_to_percent(summary['BPS_5_GROWTH'][0]))
+    self.set_json('ROE_5',
+                  self.str_to_percent(summary['ROE_5'][0].split('%')[0]))
+    self.set_json('EPS_5_GROWTH',
+                  self.str_to_percent(summary['EPS_5_GROWTH'][0]))
+    self.set_json('BPS_5_GROWTH',
+                  self.str_to_percent(summary['BPS_5_GROWTH'][0]))
 
   def str_to_percent(self, value):
     return float(value.split('%')[0]) / 100
@@ -96,11 +101,14 @@ class Itooza(Vender):
         self.concat_data(df)
 
   def date_column(self, data):
-    data = data.replace('월', '').replace('.', '-')
-    if bool(re.match('\d{2}-\d{2}', data)):
-      data = '20' + data[0:2]
+    if not self.isNaN(data):
+      data = data.replace('월', '').replace('.', '-')
+      if bool(re.match('\d{2}-\d{2}', data)):
+        data = '20' + data[0:2]
+      else:
+        data = 'MONTH'
     else:
-      data = 'MONTH'
+      data = self.id_generator()
 
     return data
 

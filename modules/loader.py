@@ -13,6 +13,7 @@ import modules.base as base
 from modules.venders.itooza import Itooza
 from modules.venders.fnguide_invest import FnguideInvest
 from modules.venders.fnguide_ratio import FnguideRatio
+from modules.venders.fnguide_finance import FnguideFinance
 from modules.venders.sejong import Sejong
 from modules.venders.post_cleaning import PostCleaning
 
@@ -36,6 +37,8 @@ def load(code):
   vender = Itooza(code)
   vender = FnguideInvest(code, vender)
   vender = FnguideRatio(code, vender)
+  vender = FnguideFinance(code, vender)
+
   vender = Sejong(code, vender)
   vender = PostCleaning(code, vender)
 
@@ -86,6 +89,19 @@ def load(code):
   # BPS_TIMES_3: PBR 3
   # EV1: EV시가총액(비지배주주지분포함) + 순차입부채
   # EPS_SIMPLE:
+  # INVENTORY_ASSETS: 재고자산
+  # FLOATING_FINANCE_ASSETS: 유동금융자산
+  # SALES_AND_FLOATING_BOND: 매출채권및기타유동채권
+  # ETC_FLOATING_ASSETS: 기타유동자산
+  # CACHE_ASSETS: 현금및현금성자산
+  # RESERVED_SALE_ASSETS: 매각예정비유동자산및처분자산집단
+  # FLOATING_DEBT: 유동부채
+  # LONG_FINANCE_ASSETS: 장기금융자산
+  # IFRS_COMPANY_FINANCE_ASSETS: 관계기업등지분관련투자자산
+  # LONG_SALES_AND_NON_FLOATING_BOND: 장기매출채권및기타비유동채권
+  # DEFERRED_CORPORATE_TAXES_ASSETS: 이연법인세자산
+  # ETC_NON_FLOATING_ASSETS: 기타비유동자산
+  # NON_FLOATING_BOND: 비유동부채
 
   # PER_5:
   # PBR_5:

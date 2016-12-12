@@ -6,24 +6,35 @@ from bs4 import BeautifulSoup
 from modules.venders.vender import Vender
 
 
-class FnguideRatio(Vender):
-  URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_FinanceRatio.asp?pGB=1&gicode=a%s'
+class FnguideFinance(Vender):
+  URL = 'http://comp.fnguide.com/SVO2/ASP/SVD_Finance.asp?pGB=1&gicode=a%s'
+  unknown_column_map = {}
+  unknown_column_counter = 0
 
   def __init__(self, code, vender=None):
     Vender.__init__(self, self.URL, vender)
+    self.unknown_column_map = {3: 'FLOATING_DEBT', 4: 'NON_FLOATING_BOND'}
+    self.unknown_column_counter = 0
 
     response = self.load_url(code)
     html, soup = response['html'], response['soup']
 
     tables = soup.find_all('div', class_='um_table')
-    df = self.get_data_from_table(tables[0])
+    df = self.get_data_from_table(tables[2])
 
-    self.concat(df, 'EPS_RATE_OF_INCREASE')
-    self.concat(df, 'ROA')
-    self.concat(df, 'ROIC')
-    self.concat(df, 'CURRENT_RATIO')
-    self.concat(df, 'INTEREST_REWARD_POWER')
-    self.concat(df, 'BUSINESS_PROFITS_CONSENSUS')
+    self.concat(df, 'INVENTORY_ASSETS')
+    self.concat(df, 'FLOATING_FINANCE_ASSETS')
+    self.concat(df, 'SALES_AND_FLOATING_BOND')
+    self.concat(df, 'ETC_FLOATING_ASSETS')
+    self.concat(df, 'CACHE_ASSETS')
+    self.concat(df, 'RESERVED_SALE_ASSETS')
+    self.concat(df, 'FLOATING_DEBT')
+    self.concat(df, 'LONG_FINANCE_ASSETS')
+    self.concat(df, 'IFRS_COMPANY_FINANCE_ASSETS')
+    self.concat(df, 'LONG_SALES_AND_NON_FLOATING_BOND')
+    self.concat(df, 'DEFERRED_CORPORATE_TAXES_ASSETS')
+    self.concat(df, 'ETC_NON_FLOATING_ASSETS')
+    self.concat(df, 'NON_FLOATING_BOND')
 
   def concat(self, df, column):
     data = self.get_data()
@@ -75,17 +86,30 @@ class FnguideRatio(Vender):
       else:
         data = self.column_name(data)
     else:
-      data = self.id_generator()
+      self.unknown_column_counter += 1
+      data = self.unknown_column_map[
+          self.
+          unknown_column_counter] if self.unknown_column_counter in self.unknown_column_map else self.id_generator(
+          )
 
     return data
 
   def column_name(self, name):
     names = {
         'IFRS(연결)': 'MONTH',
-        'EPS증가율': 'EPS_RATE_OF_INCREASE',
-        '유동비율': 'CURRENT_RATIO',
-        '이자보상배율(배)': 'INTEREST_REWARD_POWER',
-        '영업이익': 'BUSINESS_PROFITS_CONSENSUS',
+        '재고자산': 'INVENTORY_ASSETS',
+        '유동금융자산': 'FLOATING_FINANCE_ASSETS',
+        '매출채권및기타유동채권': 'SALES_AND_FLOATING_BOND',
+        '기타유동자산': 'ETC_FLOATING_ASSETS',
+        '현금및현금성자산': 'CACHE_ASSETS',
+        '매각예정비유동자산및처분자산집단': 'RESERVED_SALE_ASSETS',
+        '유동부채': 'FLOATING_DEBT',
+        '장기금융자산': 'LONG_FINANCE_ASSETS',
+        '관계기업등지분관련투자자산': 'IFRS_COMPANY_FINANCE_ASSETS',
+        '장기매출채권및기타비유동채권': 'LONG_SALES_AND_NON_FLOATING_BOND',
+        '이연법인세자산': 'DEFERRED_CORPORATE_TAXES_ASSETS',
+        '기타비유동자산': 'ETC_NON_FLOATING_ASSETS',
+        '비유동부채': 'NON_FLOATING_BOND'
     }
 
     if name and name in names:

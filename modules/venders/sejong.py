@@ -82,10 +82,13 @@ class Sejong(Vender):
     self.concat_data(df)
 
   def date_column(self, data):
-    if bool(re.match('\d{4}\.\d{2}', data)):
-      data = data[0:4]
+    if not self.isNaN(data):
+      if bool(re.match('\d{4}\.\d{2}', data)):
+        data = data[0:4]
+      else:
+        data = self.column_name(data)
     else:
-      data = self.column_name(data)
+      data = self.id_generator()
 
     return data
 

@@ -21,24 +21,28 @@ class JohnTempleton(Valuation):
     self.set_json('JOHN_TEMPLETON', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    eps = data['EPS'].dropna()[:1].mean()
-    eps_ifrs = data['EPS_IFRS'].dropna()[:5]
+    try:
+      data = self.get_data()
+      eps = data['EPS'].dropna()[:1].mean()
+      eps_ifrs = data['EPS_IFRS'].dropna()[:5]
 
-    # if not eps_ifrs.keys()[0].endswith('-12'):
-    #   eps_ifrs = eps_ifrs.drop(eps_ifrs.index[[0]])
+      # if not eps_ifrs.keys()[0].endswith('-12'):
+      #   eps_ifrs = eps_ifrs.drop(eps_ifrs.index[[0]])
 
-    # eps_ifrs = eps_ifrs.dropna()[:5]
-    df = pandas.DataFrame(columns=['EPS'])
-    eps_count = len(eps_ifrs)
+      # eps_ifrs = eps_ifrs.dropna()[:5]
+      df = pandas.DataFrame(columns=['EPS'])
+      eps_count = len(eps_ifrs)
 
-    percent_ifrs = eps_ifrs[0] / eps_ifrs[-1]
-    direction = 1 if percent_ifrs >= 0 else -1
-    eps_growth = math.pow(abs(percent_ifrs), 1 / (eps_count - 1)) * direction
+      percent_ifrs = eps_ifrs[0] / eps_ifrs[-1]
+      direction = 1 if percent_ifrs >= 0 else -1
+      eps_growth = math.pow(abs(percent_ifrs), 1 / (eps_count - 1)) * direction
 
-    for i in range(5):
-      new_eps = eps * eps_growth
-      df.loc[i] = new_eps
-      eps = new_eps
+      for i in range(5):
+        new_eps = eps * eps_growth
+        df.loc[i] = new_eps
+        eps = new_eps
 
-    return int(df.sum()['EPS'] * 1.5)
+      return int(df.sum()['EPS'] * 1.5)
+
+    except:
+      return None

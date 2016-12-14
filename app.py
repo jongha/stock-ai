@@ -65,6 +65,7 @@ def analytics(code=None):
 
   return score
 
+
 @app.route('/code.json', methods=['GET'])
 def get_code(name=None):
   result = []
@@ -73,9 +74,11 @@ def get_code(name=None):
 
   if name is not None:
     connection = sqlite3.Connection(config.DATA_STOCKS_SQLITE)
-    rows = connection.execute('SELECT name, code FROM stocks WHERE name like ?', ('%' + name + '%', ))
+    rows = connection.execute(
+        'SELECT name, code FROM stocks WHERE name like ?',
+        ('%' + name + '%', ))
     for row in rows:
-      result.append({ 'name': row[0], 'code': row[1] })
+      result.append({'name': row[0], 'code': row[1]})
 
   return jsonify(result)
 
@@ -85,7 +88,7 @@ def setup_database():
     os.remove(config.DATA_STOCKS_SQLITE)
 
   except:
-      pass
+    pass
 
   connection = None
   csv_file = None

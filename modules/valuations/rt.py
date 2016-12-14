@@ -19,9 +19,12 @@ class RT(Valuation):
     self.set_json('RT', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    value = data['SALES_AND_FLOATING_BOND'].dropna()[:1][0] / data[
-        'SALES'].dropna()[:1][0]
-    return value
+      value = data['SALES_AND_FLOATING_BOND'].dropna()[:1][0] / data[
+          'SALES'].dropna()[:1][0]
+      return value
+    except:
+      return None

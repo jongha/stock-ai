@@ -144,40 +144,99 @@ def load(code):
   return (data, json)
 
 
-def score(data, json):
-  price = data['PRICE'].dropna()[:1][0]
+def is_valid(json, columns):
+  for column in columns:
+    if not (column in json):
+      return False
 
+    if json[column] is None:
+      return False
+
+  return True
+
+
+def score(data, json):
+  price = data['PRICE'].dropna()[:1][0] if 'PRICE' in data.columns else 0
   scores = []
   criticals = []
-  criticals.append(json['VALUATION_PEG'] >= 1)  # 1 이상이면 안됨
-  criticals.append(json['VALUATION_PSR'] >= 1.5)  # 1.5 이상이면 안됨
-  criticals.append(json['VALUATION_PIOTROSKI'] <= 2)  # 1.5 이상이면 안됨
-  criticals.append(json['VALUATION_DE'] >= 100)  # 무조건 100 이하
+  grade = json['VALUATION_GRADE'] if 'VALUATION_GRADE' in json else None
 
-  scores.append(json['PER'] < json['PER_5'])
-  scores.append(json['PBR'] < json['PBR_5'])
-  scores.append(json['ROE'] < json['ROE_5'])
-  scores.append((json['DPS'] / price) > 0)  # 배당률
-  scores.append((json['DPS'] / json['EPS']) > 0)  # 배당성향
-  scores.append(json['VALUATION_PEG'] < 0.5)
-  scores.append(json['VALUATION_PSR'] < 0.75)
-  scores.append(json['VALUATION_GRAHAM'] > 0.2)
-  scores.append(json['VALUATION_JOHN_NEFF'] > 4)
-  scores.append(json['VALUATION_PIOTROSKI'] > 2)
-  scores.append(json['VALUATION_DE'] <= 100)
-  scores.append(json['VALUATION_BROWN_STONE'] >= 3)
-  scores.append(json['VALUATION_DCF'] > price)
-  scores.append(json['VALUATION_5_EPS_BPS'] < price)
-  scores.append(json['VALUATION_RIM'] < price)
-  scores.append(json['VALUATION_YAMAGUCHI_YOHEI'] < price)
-  scores.append(json['VALUATION_CANTABILE'] < price)
-  scores.append(json['VALUATION_JOHN_TEMPLETON'] < price)
-  scores.append(json['VALUATION_PER'] < price)
-  scores.append(json['VALUATION_BPS'] < price)
+  if is_valid(json, ['VALUATION_PEG']):
+    criticals.append(json['VALUATION_PEG'] >= 1)  # 1 이상이면 안됨
+
+  if is_valid(json, ['VALUATION_PSR']):
+    criticals.append(json['VALUATION_PSR'] >= 1.5)  # 1.5 이상이면 안됨
+
+  if is_valid(json, ['VALUATION_PIOTROSKI']):
+    criticals.append(json['VALUATION_PIOTROSKI'] <= 2)  # 1.5 이상이면 안됨
+
+  if is_valid(json, ['VALUATION_DE']):
+    criticals.append(json['VALUATION_DE'] >= 100)  # 무조건 100 이하
+
+  if is_valid(json, ['PER', 'PER_5']):
+    scores.append(json['PER'] < json['PER_5'])
+
+  if is_valid(json, ['PBR', 'PBR_5']):
+    scores.append(json['PBR'] < json['PBR_5'])
+
+  if is_valid(json, ['ROE', 'ROE_5']):
+    scores.append(json['ROE'] < json['ROE_5'])
+
+  if is_valid(json, ['DPS']) and price > 0:
+    scores.append((json['DPS'] / price) > 0)  # 배당률
+
+  if is_valid(json, ['DPS', 'EPS']):
+    scores.append((json['DPS'] / json['EPS']) > 0)  # 배당성향
+
+  if is_valid(json, ['VALUATION_PEG']):
+    scores.append(json['VALUATION_PEG'] < 0.5)
+
+  if is_valid(json, ['VALUATION_PSR']):
+    scores.append(json['VALUATION_PSR'] < 0.75)
+
+  if is_valid(json, ['VALUATION_GRAHAM']):
+    scores.append(json['VALUATION_GRAHAM'] > 0.2)
+
+  if is_valid(json, ['VALUATION_JOHN_NEFF']):
+    scores.append(json['VALUATION_JOHN_NEFF'] > 4)
+
+  if is_valid(json, ['VALUATION_PIOTROSKI']):
+    scores.append(json['VALUATION_PIOTROSKI'] > 2)
+
+  if is_valid(json, ['VALUATION_DE']):
+    scores.append(json['VALUATION_DE'] <= 100)
+
+  if is_valid(json, ['VALUATION_BROWN_STONE']):
+    scores.append(json['VALUATION_BROWN_STONE'] >= 3)
+
+  if is_valid(json, ['VALUATION_DCF']) and price > 0:
+    scores.append(json['VALUATION_DCF'] > price)
+
+  if is_valid(json, ['VALUATION_5_EPS_BPS']) and price > 0:
+    scores.append(json['VALUATION_5_EPS_BPS'] < price)
+
+  if is_valid(json, ['VALUATION_RIM']) and price > 0:
+    scores.append(json['VALUATION_RIM'] < price)
+
+  if is_valid(json, ['VALUATION_YAMAGUCHI_YOHEI']) and price > 0:
+    scores.append(json['VALUATION_YAMAGUCHI_YOHEI'] < price)
+
+  if is_valid(json, ['VALUATION_CANTABILE']) and price > 0:
+    scores.append(json['VALUATION_CANTABILE'] < price)
+
+  if is_valid(json, ['VALUATION_JOHN_TEMPLETON']) and price > 0:
+    scores.append(json['VALUATION_JOHN_TEMPLETON'] < price)
+
+  if is_valid(json, ['VALUATION_PER']) and price > 0:
+    scores.append(json['VALUATION_PER'] < price)
+
+  if is_valid(json, ['VALUATION_BPS']) and price > 0:
+    scores.append(json['VALUATION_BPS'] < price)
 
   score = (0 if sum(criticals) > 0 else 1) * sum(scores)
   return {
       'price': price,
+      'grade': grade,
       'critical': {
           'score': sum(criticals),
           'total': len(criticals)

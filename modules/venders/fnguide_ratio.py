@@ -30,8 +30,9 @@ class FnguideRatio(Vender):
     self.concat(df, 'TOTAL_ASSETS_AVERAGE')
 
   def concat(self, df, column):
-    data = self.get_data()
-    self.concat_data(df[column])
+    if column in df.columns:
+      data = self.get_data()
+      self.concat_data(df[column])
 
   def get_data_from_table(self, table):
     soup = BeautifulSoup(str(table), 'lxml')
@@ -43,7 +44,11 @@ class FnguideRatio(Vender):
     df = pd.read_html(str(soup), header=0)[0]
     columns = []
     for index in range(len(df.columns)):
-      columns.append(self.date_column(df.columns[index]))
+      converted_column = self.date_column(df.columns[index])
+      if converted_column in columns:
+        converted_column += '.' + str(columns.count(converted_column))
+
+      columns.append(converted_column)
 
     df.columns = columns
     df = df.transpose()

@@ -27,54 +27,59 @@ class Cantabile(Valuation):
     self.set_json('CANTABILE', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    dividend = float(data['DIVIDEND_PRICE'].dropna()[:1][0])
+      dividend = float(data['DIVIDEND_PRICE'].dropna()[:1][0])
 
-    # ROE
-    roe = float(json['ROE'])
+      # ROE
+      roe = float(json['ROE'])
 
-    # BPS
-    bps = float(json['BPS'])
+      # BPS
+      bps = float(json['BPS'])
 
-    # # EPS
-    # eps = float(json['EPS'])
+      # # EPS
+      # eps = float(json['EPS'])
 
-    # # 유통주식 수
-    # stock_count = data['STOCK_COUNT'][0] * 1000
+      # # 유통주식 수
+      # stock_count = data['STOCK_COUNT'][0] * 1000
 
-    # # 적정가 (simplified version)
-    # simple_value = (
-    #     (eps * 6) + (bps * 0.25) + (dividend * 4)) * (1 + (roe * 2))
+      # # 적정가 (simplified version)
+      # simple_value = (
+      #     (eps * 6) + (bps * 0.25) + (dividend * 4)) * (1 + (roe * 2))
 
-    # 이익가치 = (과거 2년 ~ 미래 2년, 총 5년간 평균 순이익) / 유통주식수
-    profit_value = 0
+      # 이익가치 = (과거 2년 ~ 미래 2년, 총 5년간 평균 순이익) / 유통주식수
+      profit_value = 0
 
-    profit_values = []
-    eps_ifrs = data['EPS_IFRS'].dropna()[:3]
+      profit_values = []
+      eps_ifrs = data['EPS_IFRS'].dropna()[:3]
 
-    for index in reversed(range(3)):  # 0: latest ~
-      profit_values.append(eps_ifrs[index])
+      for index in reversed(range(3)):  # 0: latest ~
+        profit_values.append(eps_ifrs[index])
 
-    eps1 = json['EPS'] * (1 + json['ROE_5'])
-    eps2 = eps1 * (1 + json['ROE_5'])
+      eps1 = json['EPS'] * (1 + json['ROE_5'])
+      eps2 = eps1 * (1 + json['ROE_5'])
 
-    profit_values.append(eps1)
-    profit_values.append(eps2)
+      profit_values.append(eps1)
+      profit_values.append(eps2)
 
-    for index in range(5):  # 0: latest ~ ??
-      profit_value += (profit_values[index] * [0.1, 0.2, 0.4, 0.2, 0.1][index])
+      for index in range(5):  # 0: latest ~ ??
+        profit_value += (profit_values[index] *
+                         [0.1, 0.2, 0.4, 0.2, 0.1][index])
 
-    profit_value *= 6
+      profit_value *= 6
 
-    # 자산가치 = 최근 재무제표상의 자기자본 * 자본조정비율 / 유통주식수
-    asset_value = bps * config.DATA_CAPITAL_RATIO_RATE
+      # 자산가치 = 최근 재무제표상의 자기자본 * 자본조정비율 / 유통주식수
+      asset_value = bps * config.DATA_CAPITAL_RATIO_RATE
 
-    # 기대성장률 = ROE * 성장률조정비율
-    expect_growth_rate = roe * config.DATA_EXPECT_GROWTH_RATE
+      # 기대성장률 = ROE * 성장률조정비율
+      expect_growth_rate = roe * config.DATA_EXPECT_GROWTH_RATE
 
-    full_value = (profit_value + asset_value + (dividend * 5)) * (
-        1 + (expect_growth_rate * 3)) * (1 - config.DATA_DISCOUNT_RATE)
+      full_value = (profit_value + asset_value + (dividend * 5)) * (
+          1 + (expect_growth_rate * 3)) * (1 - config.DATA_DISCOUNT_RATE)
 
-    return full_value
+      return full_value
+
+    except:
+      return None

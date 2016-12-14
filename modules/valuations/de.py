@@ -19,8 +19,12 @@ class DE(Valuation):
     self.set_json('DE', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    value = data['DEBT_RATIO'].dropna()[:1][0]
-    return value
+      value = data['DEBT_RATIO'].dropna()[:1][0]
+      return value
+
+    except:
+      return None

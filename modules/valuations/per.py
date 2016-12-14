@@ -18,5 +18,8 @@ class PER(Valuation):
     self.set_json('PER', self.valuate())
 
   def valuate(self):
-    json = self.get_json()
-    return int(json['EPS'] * json['PER_5'])
+    try:
+      json = self.get_json()
+      return int(json['EPS'] * json['PER_5'])
+    except:
+      return None

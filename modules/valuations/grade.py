@@ -21,22 +21,26 @@ class Grade(Valuation):
     self.set_json('GRADE', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    roe_5_mean = data['ROE'].dropna()[:5].mean()
-    ros_5_mean = data['ROS'].dropna()[:5].mean()
+    try:
+      data = self.get_data()
+      roe_5_mean = data['ROE'].dropna()[:5].mean()
+      ros_5_mean = data['ROS'].dropna()[:5].mean()
 
-    if roe_5_mean is not None and ros_5_mean is not None:
-      if ros_5_mean >= 15 and roe_5_mean >= 15:
-        return 'A'
+      if roe_5_mean is not None and ros_5_mean is not None:
+        if ros_5_mean >= 15 and roe_5_mean >= 15:
+          return 'A'
 
-      elif ros_5_mean >= 10 and roe_5_mean >= 10:
-        return 'B'
+        elif ros_5_mean >= 10 and roe_5_mean >= 10:
+          return 'B'
 
-      elif roe_5_mean >= 10:
-        return 'C'
+        elif roe_5_mean >= 10:
+          return 'C'
+
+        else:
+          return 'D'
 
       else:
-        return 'D'
+        return ''
 
-    else:
-      return ''
+    except:
+      return None

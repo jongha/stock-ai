@@ -19,8 +19,11 @@ class BrownStone(Valuation):
     self.set_json('BROWN_STONE', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    value = (json['ROE'] * 100) / json['PER']
-    return float(value)
+      value = (json['ROE'] * 100) / json['PER']
+      return float(value)
+    except:
+      return None

@@ -18,8 +18,11 @@ class RIM(Valuation):
     self.set_json('RIM', self.valuate())
 
   def valuate(self):
-    json = self.get_json()
-    value = json['BPS'] + (json['EPS'] - (json['BPS'] * 0.1)) * (
-        1 - config.DATA_DISCOUNT_RATE)
+    try:
+      json = self.get_json()
+      value = json['BPS'] + (json['EPS'] - (json['BPS'] * 0.1)) * (
+          1 - config.DATA_DISCOUNT_RATE)
 
-    return int(value)
+      return int(value)
+    except:
+      return None

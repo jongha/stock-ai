@@ -87,10 +87,16 @@ class Itooza(Vender):
     if len(tables) >= 4:
       df = pd.read_html(str(tables[3]), header=0)[0]
       columns = []
+
       for index in range(len(df.columns)):
-        columns.append(self.date_column(df.columns[index]))
+        converted_column = self.date_column(df.columns[index])
+        if converted_column in columns:
+          converted_column += '.' + str(columns.count(converted_column))
+
+        columns.append(converted_column)
 
       df.columns = columns
+
       if len(df['MONTH'].dropna()) > 0:
         for index in range(len(df['MONTH'])):
           df.loc[index, ('MONTH')] = self.column_name(df['MONTH'][index])

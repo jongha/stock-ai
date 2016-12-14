@@ -18,5 +18,8 @@ class BPS(Valuation):
     self.set_json('BPS', self.valuate())
 
   def valuate(self):
-    json = self.get_json()
-    return int(json['BPS'] * json['PBR_5'])
+    try:
+      json = self.get_json()
+      return int(json['BPS'] * json['PBR_5'])
+    except:
+      return None

@@ -25,8 +25,9 @@ class Sejong(Vender):
     self.set_debt_ratio()
 
   def concat(self, df, column):
-    data = self.get_data()
-    self.concat_data(df[column])
+    if column in df.columns:
+      data = self.get_data()
+      self.concat_data(df[column])
 
   def get_data_from_table(self, table):
     soup = BeautifulSoup(str(table), 'lxml')
@@ -39,7 +40,11 @@ class Sejong(Vender):
 
     columns = []
     for index in range(len(df.columns)):
-      columns.append(self.date_column(df.columns[index]))
+      converted_column = self.date_column(df.columns[index])
+      if converted_column in columns:
+        converted_column += '.' + str(columns.count(converted_column))
+
+      columns.append(converted_column)
 
     df.columns = columns
     df = df.transpose()

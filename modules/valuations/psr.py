@@ -19,14 +19,17 @@ class PSR(Valuation):
     self.set_json('PSR', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    bps = json['BPS']
-    eps_5_growth = json['EPS_5_GROWTH']
+      bps = json['BPS']
+      eps_5_growth = json['EPS_5_GROWTH']
 
-    value = data['PRICE'].dropna()[:1][0] / (
-        (data['SALES'].dropna()[:1][0] * 100000000) /
-        (data['STOCK_COUNT'].dropna()[:1][0] * 1000))
+      value = data['PRICE'].dropna()[:1][0] / (
+          (data['SALES'].dropna()[:1][0] * 100000000) /
+          (data['STOCK_COUNT'].dropna()[:1][0] * 1000))
 
-    return float(value)
+      return float(value)
+    except:
+      return None

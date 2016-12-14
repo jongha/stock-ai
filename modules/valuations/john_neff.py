@@ -20,13 +20,16 @@ class JohnNeff(Valuation):
     self.set_json('JOHN_NEFF', self.valuate())
 
   def valuate(self):
-    data = self.get_data()
-    json = self.get_json()
+    try:
+      data = self.get_data()
+      json = self.get_json()
 
-    bps = json['BPS']
-    eps_5_growth = json['EPS_5_GROWTH']
+      bps = json['BPS']
+      eps_5_growth = json['EPS_5_GROWTH']
 
-    value = ((json['ROE_5'] * 100) + data['DIVIDEND_RATE'].dropna()[:1][0]
-             ) / json['PER']
+      value = ((json['ROE_5'] * 100) + data['DIVIDEND_RATE'].dropna()[:1][0]
+               ) / json['PER']
 
-    return float(value)
+      return float(value)
+    except:
+      return None

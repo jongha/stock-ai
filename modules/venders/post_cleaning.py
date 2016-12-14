@@ -23,35 +23,38 @@ class PostCleaning(Vender):
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = (data['FCFF'][month] / data['EV1'][month]) * 100
-      df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
+    if 'FCFF' in data.columns and 'EV1' in data.columns:
+      for month in data.index.values:
+        value = (data['FCFF'][month] / data['EV1'][month]) * 100
+        df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   def set_sales_fcff(self):
     column_name = 'SALES_FCFF'
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = (data['FCFF'][month] / data['SALES'][month]) * 100
-      df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
+    if 'FCFF' in data.columns and 'SALES' in data.columns:
+      for month in data.index.values:
+        value = (data['FCFF'][month] / data['SALES'][month]) * 100
+        df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   def set_net_income_ratio(self):
     column_name = 'NET_INCOME_RATIO'
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = (data['EPS_IFRS'][month] /
-               ((data['SALES'][month] * 100000000) /
-                (self.data['STOCK_COUNT'][month] * 1000))) * 100
-      df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
+    if 'EPS_IFRS' in data.columns and 'SALES' in data.columns:
+      for month in data.index.values:
+        value = (data['EPS_IFRS'][month] /
+                 ((data['SALES'][month] * 100000000) /
+                  (self.data['STOCK_COUNT'][month] * 1000))) * 100
+        df[column_name][month] = round(value if not pd.isnull(value) else 0, 2)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   # 주가
   def set_get_price(self):
@@ -59,22 +62,24 @@ class PostCleaning(Vender):
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = data['BPS'][month] * self.data['PBR'][month]
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
+    if 'BPS' in data.columns and 'PBR' in data.columns:
+      for month in data.index.values:
+        value = data['BPS'][month] * self.data['PBR'][month]
+        df[column_name][month] = int(value if not pd.isnull(value) else 0)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   def set_bps_multiple(self, multiple):
     column_name = 'BPS_TIMES_' + str(multiple)
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = data['BPS'][month] * multiple
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
+    if 'BPS' in data.columns:
+      for month in data.index.values:
+        value = data['BPS'][month] * multiple
+        df[column_name][month] = int(value if not pd.isnull(value) else 0)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   # 배당성향(연결)
   def set_dividend_payout_ratio(self):
@@ -82,12 +87,13 @@ class PostCleaning(Vender):
     df = pd.DataFrame(columns=[column_name], index=self.data.index.values)
     data = self.get_data()
 
-    for month in data.index.values:
-      value = data['DIVIDEND_PRICE'][month] / self.data['EPS_IFRS'][
-          month] * 100
-      df[column_name][month] = int(value if not pd.isnull(value) else 0)
+    if 'DIVIDEND_PRICE' in data.columns:
+      for month in data.index.values:
+        value = data['DIVIDEND_PRICE'][month] / self.data['EPS_IFRS'][
+            month] * 100
+        df[column_name][month] = int(value if not pd.isnull(value) else 0)
 
-    self.concat_data(df)
+      self.concat_data(df)
 
   def get_data_simple(self, tables):
     df = pd.read_html(str(tables[0]), header=0)[0]

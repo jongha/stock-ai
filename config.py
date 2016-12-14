@@ -23,3 +23,8 @@ DATA_SOTCK_YEARLY_MEAN = 0.0907  # 종합주가 연평균수익			9.07
 DATA_BASE_PATH = tempfile.gettempdir()
 DATA_PATH = os.path.join(DATA_BASE_PATH, APP_NAME)
 DATA_EXTENSION = '.pkl'
+
+DATA_STOCKS_CSV = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'database', 'stocks.csv')
+DATA_STOCKS_SQLITE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'database', 'stocks.sqlite')

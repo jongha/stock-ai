@@ -5,6 +5,9 @@ import modules.base as base
 import numpy as np
 from modules.decorators.minified_response import minified_response
 import config
+import sqlite3
+import csv
+import config
 
 app = Flask(__name__)
 
@@ -39,21 +42,78 @@ def analytics(code=None):
   if code is None:
     code = request.args.get('code')
     if code is not None:
-      data = analytics(code)
-      return jsonify(data)
+      return analytics(code)
+
     else:
       return None
 
   else:
     data = None
-    if code:
-      data = base.load(code)
-      if not config.PRODUCTION or data is None:
-        import modules.loader as loader
-        data = loader.load(code)
-        base.dump(code, data)
+    json = None
 
-    return data
+    if code:
+      try:
+        data, json, score = base.load(code)
+      except:
+        pass
+
+      if data is None or json is None:
+        import modules.loader as loader
+        data, json = loader.load(code)
+        score = loader.score(data, json)
+        base.dump(code, (data, json, score))
+
+  return score
+
+@app.route('/code.json', methods=['GET'])
+def get_code(name=None):
+  result = []
+  if name is None:
+    name = request.args.get('name')
+
+  if name is not None:
+    connection = sqlite3.Connection(config.DATA_STOCKS_SQLITE)
+    rows = connection.execute('SELECT name, code FROM stocks WHERE name like ?', ('%' + name + '%', ))
+    for row in rows:
+      result.append({ 'name': row[0], 'code': row[1] })
+
+  return jsonify(result)
+
+
+def setup_database():
+  try:
+    os.remove(config.DATA_STOCKS_SQLITE)
+
+  except:
+      pass
+
+  connection = None
+  csv_file = None
+
+  try:
+    connection = sqlite3.Connection(config.DATA_STOCKS_SQLITE)
+    cursor = connection.cursor()
+    cursor.execute(
+        'CREATE TABLE "stocks" ("name" varchar(50), "code" varchar(6), "category" varchar(50), "product" varchar(50), "date" varchar(10), "end" varchar(10), "ceo" varchar(20), "homepage" varchar(100), "location" varchar(30));'
+    )
+    cursor.execute('CREATE UNIQUE INDEX stocks_name ON stocks(name);')
+    cursor.execute('CREATE UNIQUE INDEX stocks_code ON stocks(code);')
+
+    csv_file = open(config.DATA_STOCKS_CSV)
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    cursor.executemany('INSERT INTO stocks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                       csv_reader)
+    cursor.close()
+    connection.commit()
+
+  finally:
+    if connection is not None:
+      connection.close()
+      connection = None
+
+    if csv_file is not None:
+      csv_file.close()
+      csv_file = None
 
 
 if __name__ == '__main__':
@@ -65,6 +125,10 @@ if __name__ == '__main__':
 
   else:
     print('Argument List:', str(sys.argv))
+    command = sys.argv[1]
 
-    if sys.argv[1] == 'analytics':
+    if command == 'analytics':
       analytics(sys.argv[2])
+
+    elif command == 'database':
+      setup_database()

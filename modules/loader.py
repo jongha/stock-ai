@@ -141,41 +141,49 @@ def load(code):
   # VALUATION_5_EPS_BPS: 5 EPS/BPS
   # VALUATION_RIM: 올슨 초과이익모형
 
-  return data
+  return (data, json)
 
-  # fnguide_main_result = fnguide_main.load(fnguide_main_data['html'],
-  #                                         fnguide_main_data['soup'])
-  # fnguide_invest_result = fnguide_invest.load(fnguide_invest_data['html'], fnguide_invest_data['soup'])
 
-  # data = {
-  #     'json': {
-  #         'code': code,
-  #         'title': itooza_result['title'],
-  #         'price': itooza_result['price'],
-  #         'summary': fnguide_main_result['summary'],
-  #         'eps': itooza_result['eps'],
-  #         'per_5': itooza_result['per_5'],
-  #         'pbr_5': itooza_result['pbr_5'],
-  #         'roe_5': itooza_result['roe_5'],
-  #         'eps_5_growth': itooza_result['eps_5_growth'],
-  #         'bps_5_growth': itooza_result['eps_5_growth'],
-  #         'grade': grade.valuate(itooza_result['roe_5_mean'],
-  #                                 itooza_result['ros_5_mean']),
-  #         'valuate': {
-  #             # 현 EPS 과거 5년 PER 평균을 곱한 값
-  #             'per_5': itooza_result['eps'] * itooza_result['per_5'],
-  #             # 현 BPS 과거 5년 PBR 평균값을 곱한 값
-  #             'pbr_5': itooza_result['bps'] * itooza_result['pbr_5'],
-  #             # 주가수익배수(PER) 평가법, 과거 EPS성장률로 향후 5년의 EPS 추정하여 그 합의 1배~2배를 적용 (중간값 1.5배를 적용함)
-  #             'johntempleton': johntempleton.valuate(
-  #                 itooza_result['eps'], itooza_result['raw']['EPS_IFRS']),
-  #         }
-  #     },
-  #     'itooza': itooza_result,
-  #     'fnguide': {
-  #         'main': fnguide_main_result,
-  #         # 'invest': fnguide_invest_result,
-  #     },
-  # }
+def score(data, json):
+  price = data['PRICE'].dropna()[:1][0]
 
-  # return data
+  scores = []
+  criticals = []
+  criticals.append(json['VALUATION_PEG'] >= 1)  # 1 이상이면 안됨
+  criticals.append(json['VALUATION_PSR'] >= 1.5)  # 1.5 이상이면 안됨
+  criticals.append(json['VALUATION_PIOTROSKI'] <= 2)  # 1.5 이상이면 안됨
+  criticals.append(json['VALUATION_DE'] >= 100)  # 무조건 100 이하
+
+  scores.append(json['PER'] < json['PER_5'])
+  scores.append(json['PBR'] < json['PBR_5'])
+  scores.append(json['ROE'] < json['ROE_5'])
+  scores.append((json['DPS'] / price) > 0)  # 배당률
+  scores.append((json['DPS'] / json['EPS']) > 0)  # 배당성향
+  scores.append(json['VALUATION_PEG'] < 0.5)
+  scores.append(json['VALUATION_PSR'] < 0.75)
+  scores.append(json['VALUATION_GRAHAM'] > 0.2)
+  scores.append(json['VALUATION_JOHN_NEFF'] > 4)
+  scores.append(json['VALUATION_PIOTROSKI'] > 2)
+  scores.append(json['VALUATION_DE'] <= 100)
+  scores.append(json['VALUATION_BROWN_STONE'] >= 3)
+  scores.append(json['VALUATION_DCF'] > price)
+  scores.append(json['VALUATION_5_EPS_BPS'] < price)
+  scores.append(json['VALUATION_RIM'] < price)
+  scores.append(json['VALUATION_YAMAGUCHI_YOHEI'] < price)
+  scores.append(json['VALUATION_CANTABILE'] < price)
+  scores.append(json['VALUATION_JOHN_TEMPLETON'] < price)
+  scores.append(json['VALUATION_PER'] < price)
+  scores.append(json['VALUATION_BPS'] < price)
+
+  score = (0 if sum(criticals) > 0 else 1) * sum(scores)
+  return {
+      'price': price,
+      'critical': {
+          'score': sum(criticals),
+          'total': len(criticals)
+      },
+      'score': {
+          'score': sum(scores),
+          'total': len(scores)
+      }
+  }

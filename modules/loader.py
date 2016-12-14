@@ -33,6 +33,9 @@ from modules.valuations.psr import PSR
 from modules.valuations.graham import Graham
 from modules.valuations.john_neff import JohnNeff
 from modules.valuations.piotroski import Piotroski
+from modules.valuations.de import DE
+from modules.valuations.rt import RT
+from modules.valuations.brown_stone import BrownStone
 
 
 def load(code):
@@ -65,6 +68,9 @@ def load(code):
   valuation = Graham(valuation)
   valuation = JohnNeff(valuation)
   valuation = Piotroski(valuation)
+  valuation = DE(valuation)
+  valuation = RT(valuation)
+  valuation = BrownStone(valuation)
 
   # print(valuation.get_data())
   # print(valuation.get_json())

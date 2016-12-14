@@ -26,7 +26,7 @@ class JohnNeff(Valuation):
     bps = json['BPS']
     eps_5_growth = json['EPS_5_GROWTH']
 
-    value = (
-        (json['ROE_5']*100) + data['DIVIDEND_RATE'].dropna()[:1][0]) / json['PER']
+    value = ((json['ROE_5'] * 100) + data['DIVIDEND_RATE'].dropna()[:1][0]
+             ) / json['PER']
 
     return float(value)

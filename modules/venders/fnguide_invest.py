@@ -22,6 +22,8 @@ class FnguideInvest(Vender):
     self.concat(df, 'STOCK_COUNT')
     self.concat(df, 'EV/EBITDA')
     self.concat(df, 'EV1')
+    self.concat(df, 'TOTAL_CASH_FLOW')
+    self.concat(df, 'OPERATING_PROFIT_AFTER_TAX')
 
   def concat(self, df, column):
     data = self.get_data()
@@ -81,6 +83,8 @@ class FnguideInvest(Vender):
     names = {
         'IFRS 연결': 'MONTH',
         '수정평균주식수': 'STOCK_COUNT',
+        '총현금흐름': 'TOTAL_CASH_FLOW',
+        '세후영업이익': 'OPERATING_PROFIT_AFTER_TAX',
     }
 
     if name and name in names:

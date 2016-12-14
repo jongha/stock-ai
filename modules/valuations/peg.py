@@ -28,6 +28,7 @@ class PEG(Valuation):
     bps = json['BPS']
     eps_5_growth = json['EPS_5_GROWTH']
 
-    value = ((eps_5_growth * 100) + data['DIVIDEND_RATE'].dropna()[:1][0]) / json['PER']
+    value = ((eps_5_growth * 100) + data['DIVIDEND_RATE'].dropna()[:1][0]
+             ) / json['PER']
 
     return float(value)

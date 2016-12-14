@@ -32,6 +32,7 @@ from modules.valuations.peg import PEG
 from modules.valuations.psr import PSR
 from modules.valuations.graham import Graham
 from modules.valuations.john_neff import JohnNeff
+from modules.valuations.piotroski import Piotroski
 
 
 def load(code):
@@ -63,8 +64,10 @@ def load(code):
   valuation = PSR(valuation)
   valuation = Graham(valuation)
   valuation = JohnNeff(valuation)
+  valuation = Piotroski(valuation)
 
-  print(valuation.get_json())
+  # print(valuation.get_data())
+  # print(valuation.get_json())
 
   # STOCK_COUNT: 주식수(천주)
   # PRICE: 주가
@@ -110,6 +113,12 @@ def load(code):
   # DEFERRED_CORPORATE_TAXES_ASSETS: 이연법인세자산
   # ETC_NON_FLOATING_ASSETS: 기타비유동자산
   # NON_FLOATING_BOND: 비유동부채
+  # NET_PROFIT_DURING_A_YEAR: 당기순이익(연율화)
+  # TOTAL_CASH_FLOW: 총현금흐름
+  # OPERATING_PROFIT_AFTER_TAX: 세후영업이익
+  # GROSS_PROFIT_MARGIN: 매출총이익율
+  # SALES_GROWTH_RATE: 매출액증가율
+  # TOTAL_ASSETS_AVERAGE: 자산총계(평균)
 
   # PER_5:
   # PBR_5:

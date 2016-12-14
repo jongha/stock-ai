@@ -24,6 +24,10 @@ class FnguideRatio(Vender):
     self.concat(df, 'CURRENT_RATIO')
     self.concat(df, 'INTEREST_REWARD_POWER')
     self.concat(df, 'BUSINESS_PROFITS_CONSENSUS')
+    self.concat(df, 'NET_PROFIT_DURING_A_YEAR')
+    self.concat(df, 'GROSS_PROFIT_MARGIN')
+    self.concat(df, 'SALES_GROWTH_RATE')
+    self.concat(df, 'TOTAL_ASSETS_AVERAGE')
 
   def concat(self, df, column):
     data = self.get_data()
@@ -86,6 +90,10 @@ class FnguideRatio(Vender):
         '유동비율': 'CURRENT_RATIO',
         '이자보상배율(배)': 'INTEREST_REWARD_POWER',
         '영업이익': 'BUSINESS_PROFITS_CONSENSUS',
+        '당기순이익(연율화)': 'NET_PROFIT_DURING_A_YEAR',
+        '매출총이익율': 'GROSS_PROFIT_MARGIN',
+        '매출액증가율': 'SALES_GROWTH_RATE',
+        '자산총계(평균)': 'TOTAL_ASSETS_AVERAGE',
     }
 
     if name and name in names:

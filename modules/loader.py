@@ -235,14 +235,14 @@ def score(data, json):
 
   score = (0 if sum(criticals) > 0 else 1) * sum(scores)
   return {
-      'price': price,
+      'price': str(price),
       'grade': grade,
       'critical': {
-          'score': sum(criticals),
-          'total': len(criticals)
+          'score': str(sum(criticals)),
+          'total': str(len(criticals))
       },
       'score': {
-          'score': sum(scores),
-          'total': len(scores)
+          'score': str(sum(scores)),
+          'total': str(len(scores))
       }
   }

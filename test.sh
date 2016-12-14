@@ -3,4 +3,4 @@
 rm -rf /tmp/stock-ai
 # python app.py analytics 005930
 # python app.py analytics 008560
-python app.py analytics 131220
+python app.py analytics 207940

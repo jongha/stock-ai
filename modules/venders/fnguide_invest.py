@@ -76,6 +76,7 @@ class FnguideInvest(Vender):
     if not self.isNaN(data):
       if bool(re.match('\d{4}/\d{2}', data)):
         data = data[0:4]
+
       else:
         data = self.column_name(data)
     else:
@@ -85,6 +86,7 @@ class FnguideInvest(Vender):
 
   def column_name(self, name):
     names = {
+        'IFRS 개별': 'MONTH',
         'IFRS 연결': 'MONTH',
         '수정평균주식수': 'STOCK_COUNT',
         '총현금흐름': 'TOTAL_CASH_FLOW',

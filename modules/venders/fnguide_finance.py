@@ -102,6 +102,7 @@ class FnguideFinance(Vender):
   def column_name(self, name):
     names = {
         'IFRS(연결)': 'MONTH',
+        'IFRS(개별)': 'MONTH',
         '재고자산': 'INVENTORY_ASSETS',
         '유동금융자산': 'FLOATING_FINANCE_ASSETS',
         '매출채권및기타유동채권': 'SALES_AND_FLOATING_BOND',

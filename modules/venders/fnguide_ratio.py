@@ -91,6 +91,7 @@ class FnguideRatio(Vender):
   def column_name(self, name):
     names = {
         'IFRS(연결)': 'MONTH',
+        'IFRS(별도)': 'MONTH',
         'EPS증가율': 'EPS_RATE_OF_INCREASE',
         '유동비율': 'CURRENT_RATIO',
         '이자보상배율(배)': 'INTEREST_REWARD_POWER',

@@ -31,8 +31,8 @@ def index(code=None):
   return render_template('index.html', data=data)
 
 
-@app.route('/analytics.json', methods=['GET'])
-def analytics(code=None):
+@app.route('/evaluate.json', methods=['GET'])
+def evaluate(code=None):
   # if request.method == 'POST':
   #   u = User(request.form['name'], request.form['email'])
   #   db.session.add(u)
@@ -42,7 +42,7 @@ def analytics(code=None):
   if code is None:
     code = request.args.get('code')
     if code is not None:
-      return analytics(code)
+      return evaluate(code)
 
     else:
       return None
@@ -63,7 +63,7 @@ def analytics(code=None):
         score = loader.score(data, json)
         base.dump(code, (data, json, score))
 
-  return score
+  return jsonify(score)
 
 
 @app.route('/code.json', methods=['GET'])

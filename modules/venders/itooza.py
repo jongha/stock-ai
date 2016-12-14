@@ -47,7 +47,11 @@ class Itooza(Vender):
                   self.str_to_percent(summary['BPS_5_GROWTH'][0]))
 
   def str_to_percent(self, value):
-    return float(value.split('%')[0]) / 100
+    if not self.isNaN(value):
+      return float(value.split('%')[0]) / 100
+
+    else:
+      return value
 
   def concat(self, column_name, value):
     if value:

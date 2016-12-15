@@ -152,6 +152,9 @@ def is_valid(json, columns):
     if json[column] is None:
       return False
 
+    if isinstance(json[column], str):
+      return False
+
   return True
 
 

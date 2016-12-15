@@ -14,6 +14,21 @@ To run this application, follow the steps below.
 * Run `pip freeze > requirements.txt`
 * Run `heroku create --stack cedar`
 
+## Result
+```
+{
+  'price': str(price),
+  'grade': grade,
+  'critical': {
+      'score': str(sum(criticals)),
+      'total': str(len(criticals))
+  },
+  'score': {
+      'score': str(sum(scores)),
+      'total': str(len(scores))
+  }
+}
+```
 ## License
 
 [MIT License](https://github.com/jongha/stock-ai/blob/master/LICENSE.txt)
